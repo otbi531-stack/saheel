@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>صهيل — للخيول العربية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Reem+Kufi:wght@500;700&display=swap">
+<style>
+:root{
+  --bg:#F7F3EA; --card:#FFFFFF; --card2:#FBF7EF; --ink:#1B2233; --ink2:#3A4152; --muted:#646A76; --line:#E6DCC8;
+  --accent:#1F3A5F; --accent-d:#14284A; --on-acc:#FFFFFF; --gold:#F1E4C4; --gold-ink:#6B4E14; --price:#8A6A24;
+  --ph:#ECE4D4; --ok-bg:#E3F0E4; --ok:#24552E; --red:#B4261A; --seg:#EAE2D2; --dash:#CDBB98;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Almarai',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+body{padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid #C9A055;outline-offset:2px}
+.top{position:sticky;top:0;z-index:20;background:var(--bg);padding:calc(10px + env(safe-area-inset-top)) 16px 10px}
+.top .btn,.top .btn.outline{background:transparent;color:#E8D7A8;border-color:#8A6A24}
+.top-in{max-width:560px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.logo{position:relative;display:inline-block;padding-bottom:26px;font-family:'Reem Kufi',serif;font-size:30px;font-weight:700;color:#C9A055;line-height:1.05;text-decoration:none}
+.logo small{position:absolute;top:calc(100% - 22px);right:78%;font-family:'Almarai',sans-serif;font-size:12px;font-weight:600;color:#B9AE97;white-space:nowrap;line-height:1.4}
+main{max-width:560px;margin:0 auto;padding:0 16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:48px;padding:0 18px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-acc)}
+.btn.outline{border-color:var(--accent);color:var(--accent)}
+.btn.danger{color:var(--red);border-color:#E9C3BE}
+.btn.sm{height:40px;padding:0 14px;font-size:14px}
+.btn.block{width:100%}
+.btn:disabled{opacity:.6}
+.search{display:flex;align-items:center;gap:10px;height:50px;padding:0 14px;background:var(--card);border:1px solid var(--line);border-radius:14px;color:var(--muted);margin-top:6px}
+.search input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:15px;color:var(--ink)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:14px 0 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips.wrap{flex-wrap:wrap;padding:0}
+.chip{flex:none;height:42px;padding:0 16px;border-radius:21px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:14px;font-weight:500;cursor:pointer}
+.chip.on{background:var(--accent);border-color:var(--accent);color:var(--on-acc);font-weight:600}
+.soon{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 4px}
+.soon a{text-decoration:none}
+.soon button,.soon a{display:flex;align-items:center;gap:10px;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:14px;font-weight:600;text-align:right;cursor:pointer}
+.soon small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.h1{font-size:24px;font-weight:700;margin:6px 0 16px}
+.h2{font-size:18px;font-weight:700;margin:20px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;text-decoration:none;color:var(--ink)}
+.ph{position:relative;aspect-ratio:4/3;background:var(--ph);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.badge{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 9px;border-radius:12px;background:var(--gold);color:var(--gold-ink);font-size:11px;font-weight:700;white-space:nowrap}
+.ph .badge{position:absolute;top:8px;right:8px}
+.badge.sold{background:var(--ink);color:var(--bg)}
+.cb{padding:10px 12px 12px;display:flex;flex-direction:column;gap:3px}
+.cb b{font-size:16px}
+.meta{font-size:12px;color:var(--muted)}
+.price{font-size:14px;font-weight:700;color:var(--price);margin-top:3px}
+.empty{text-align:center;color:var(--muted);padding:44px 10px;font-size:14px;line-height:1.8}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px}
+.hero{position:relative;margin:0 -16px 16px}
+.gallery{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;background:var(--ph);scrollbar-width:none}
+.gallery::-webkit-scrollbar{display:none}
+.gallery img{flex:none;width:100%;aspect-ratio:4/3;object-fit:cover;scroll-snap-align:center}
+.hero .ph{aspect-ratio:4/3}
+.fab{position:absolute;top:12px;width:44px;height:44px;border-radius:22px;border:0;background:var(--card);color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;box-shadow:0 1px 3px rgba(42,26,16,.18)}
+.fab.r{right:16px}.fab.l{left:16px}
+.pcount{position:absolute;bottom:12px;left:16px;background:rgba(42,26,16,.7);color:#fff;font-size:12px;padding:5px 10px;border-radius:12px}
+.hd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.hd h1{margin:0;font-size:28px;font-weight:700}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{height:30px;display:inline-flex;align-items:center;padding:0 12px;border-radius:15px;background:var(--card);border:1px solid var(--line);font-size:13px}
+.loc{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted);margin-bottom:16px}
+.pricebox{display:flex;flex-direction:column;gap:2px}
+.pricebox b{font-size:22px;color:var(--price)}
+.sec{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}
+.sec h2{margin:0;font-size:18px}
+.ped{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ped .col{display:flex;flex-direction:column;gap:6px}
+.ped .main{padding:12px;border-radius:12px;background:var(--accent);color:var(--on-acc)}
+.ped .main.f{background:var(--gold);color:var(--ink)}
+.ped .main span{display:block;font-size:11px;opacity:.85}
+.ped .main b{font-size:15px}
+.ped .sub{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ped .sub div{padding:8px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:600;min-height:52px}
+.ped .sub span{display:block;font-size:10px;font-weight:400;color:var(--muted)}
+.text{white-space:pre-line;font-size:14px;line-height:1.8;margin:0}
+.seller{display:flex;align-items:center;gap:12px}
+.av{width:48px;height:48px;flex:none;border-radius:24px;background:var(--accent);color:var(--on-acc);display:flex;align-items:center;justify-content:center;font-family:'Reem Kufi',serif;font-size:20px;font-weight:700}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.f{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600;margin-bottom:16px}
+.f .opt{font-weight:400;color:var(--muted);font-size:12px}
+.in{width:100%;min-width:0;height:50px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);font:inherit;font-size:15px;font-weight:400;color:var(--ink)}
+textarea.in{height:auto;padding:12px 14px;line-height:1.6;resize:vertical}
+.in::placeholder{color:var(--muted)}
+.seg{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:4px;padding:4px;border-radius:14px;background:var(--seg)}
+.seg button{height:42px;border:0;border-radius:10px;background:transparent;font:inherit;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--card);color:var(--accent)}
+.check{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px;font-weight:500;margin:-6px 0 12px}
+.check input{width:20px;height:20px;accent-color:var(--accent)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:4px 0 20px}
+.steps div{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted)}
+.steps i{height:5px;border-radius:3px;background:var(--line)}
+.steps .on i{background:var(--accent)}
+.steps .cur{color:var(--ink);font-weight:700}
+.upload{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:140px;border:2px dashed var(--dash);border-radius:16px;background:var(--card);color:var(--muted);font-size:13px;cursor:pointer;margin-bottom:12px;text-align:center}
+.upload b{color:var(--ink);font-size:15px}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.thumbs div{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--ph)}
+.thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.thumbs .x{position:absolute;top:4px;left:4px;width:34px;height:34px;border-radius:17px;border:0;background:rgba(42,26,16,.7);color:#fff;font-size:18px;cursor:pointer}
+.thumbs .cv{position:absolute;bottom:4px;right:4px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:10px;background:var(--gold);color:var(--gold-ink);border:0;cursor:pointer;font-family:inherit}
+.note{padding:12px 14px;border-radius:12px;background:var(--gold);color:var(--gold-ink);font-size:13px;line-height:1.7;margin-bottom:16px}
+.wact{display:flex;gap:10px;margin:8px 0 20px}
+.wact .btn.primary{flex:1}
+.mrow{display:flex;align-items:center;gap:12px;padding:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:10px}
+.mrow .ph{width:72px;height:72px;aspect-ratio:auto;flex:none;border-radius:10px}
+.mrow .mi{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 20px}
+.actions .btn{flex:1 1 140px}
+.hero-logo{margin:0 -16px 14px;padding:6px 0 14px;display:flex;justify-content:center;background:#000;border-radius:0 0 28px 28px}
+.hero-logo img{width:min(100%,520px);height:auto;display:block;-webkit-mask-image:radial-gradient(ellipse 72% 70% at 50% 48%,#000 60%,transparent 100%);mask-image:radial-gradient(ellipse 72% 70% at 50% 48%,#000 60%,transparent 100%)}
+.admin{border:1.5px dashed var(--dash);background:var(--card2)}
+.st-head{display:flex;align-items:center;gap:14px;margin:6px 0 12px}
+.st-logo{width:76px;height:76px;flex:none;border-radius:38px;background:var(--accent);color:var(--on-acc);display:flex;align-items:center;justify-content:center;font-family:'Reem Kufi',serif;font-size:32px;font-weight:700;overflow:hidden}
+.st-logo img{width:100%;height:100%;object-fit:cover}
+.st-head h1{margin:0;font-size:24px;line-height:1.3}
+.st-bio{font-size:14px;line-height:1.8;color:var(--ink2);white-space:pre-line;margin:0 0 14px}
+.st-btns{display:flex;gap:8px;margin-bottom:14px}
+.st-btns .btn{flex:1}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.stats div{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px;border-radius:12px;background:var(--card);border:1px solid var(--line)}
+.stats b{font-size:18px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line);margin-bottom:14px}
+.tabs button{height:46px;border:0;border-bottom:3px solid transparent;background:transparent;font:inherit;font-size:15px;font-weight:500;color:var(--muted);cursor:pointer}
+.tabs button.on{border-bottom-color:var(--accent);color:var(--ink);font-weight:700}
+.logo-up{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.mystable{display:flex;align-items:center;gap:12px;padding:14px;margin-bottom:16px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+.mystable .mi{flex:1;min-width:0}
+.live{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:13px;background:var(--red);color:#fff;font-size:12px;font-weight:700;white-space:nowrap}
+.live i{width:7px;height:7px;border-radius:4px;background:var(--card)}
+.live.off{background:var(--ink)}
+.live.soon{background:var(--gold);color:var(--gold-ink)}
+.ph .live{position:absolute;top:8px;right:8px}
+.bidbox{display:flex;gap:10px;margin-bottom:14px}
+.bidbox .cur{flex:1;display:flex;flex-direction:column;gap:3px;padding:16px;border-radius:16px;background:var(--accent);color:var(--on-acc)}
+.bidbox .cur span{font-size:12px;color:#E8D7A8}
+.bidbox .cur b{font-size:26px;line-height:1.2}
+.bidbox .clock{width:118px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-radius:16px;background:var(--card);border:1px solid var(--line);text-align:center}
+.bidbox .clock b{font-size:20px;color:var(--red);font-variant-numeric:tabular-nums;direction:ltr}
+.incs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.incs button{height:46px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font:inherit;font-size:14px;font-weight:700;color:var(--ink);cursor:pointer}
+.incs button.on{border-color:var(--accent);background:var(--gold);color:var(--accent-d)}
+.hist{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:16px}
+.hist div{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);font-size:14px}
+.hist div:last-child{border-bottom:0}
+.hist .me{background:var(--card2);font-weight:700}
+.bank{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:16px;background:var(--card);border:1.5px solid var(--accent);margin-bottom:16px}
+.bank .row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px}
+.bank .row b{direction:ltr;text-align:left;word-break:break-all}
+.ok{padding:12px 14px;border-radius:12px;background:var(--ok-bg);color:var(--ok);font-size:14px;font-weight:600;line-height:1.7;margin-bottom:14px}
+.req{display:flex;gap:12px;align-items:center;padding:12px;border-radius:14px;background:var(--card);border:1px solid var(--line);margin-bottom:10px}
+.req img{width:64px;height:64px;border-radius:10px;object-fit:cover;flex:none;cursor:zoom-in}
+.req .mi{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+nav.bottom{position:fixed;bottom:0;left:0;right:0;z-index:20;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;height:calc(72px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
+nav.bottom a{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:72px;font-size:11px;color:var(--muted);text-decoration:none;font-weight:500}
+nav.bottom a.on{color:var(--accent);font-weight:700}
+nav.bottom a.add{width:58px;height:58px;min-width:0;margin-top:-28px;border-radius:29px;background:var(--accent);color:var(--on-acc);border:4px solid var(--bg);justify-content:center}
+.toast{position:fixed;bottom:calc(96px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;font-size:14px;z-index:50;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%;text-align:center}
+.toast.show{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top" style="background:#000"><div class="top-in">
+  <a class="logo" href="#/">صهيل<small>للخيول العربية</small></a>
+  <div id="authBox"></div>
+</div></header>
+
+<main id="app"><div class="empty">جارٍ التحميل…</div></main>
+
+<nav class="bottom" aria-label="التنقل الرئيسي">
+  <a href="#/" data-nav="home"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg>الرئيسية</a>
+  <a href="#/auctions" data-nav="auctions"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m14 13-7.5 7.5a2.1 2.1 0 0 1-3-3L11 10"/><path d="m16 16 6-6M8 8l6-6M9 7l8 8"/></svg>المزادات</a>
+  <a href="#/add" data-nav="add" class="add" aria-label="أضف إعلان"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></a>
+  <a href="#/mine" data-nav="mine"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>إعلاناتي</a>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script type="module">
+/* ============ الإعدادات: عدّل هذا الجزء فقط ============ */
+const firebaseConfig = {
+  apiKey: "AIzaSyC25pThO8WPKXt4-59zHh8gl2qINufDVf4",
+  authDomain: "saheel-db760.firebaseapp.com",
+  projectId: "saheel-db760",
+  storageBucket: "saheel-db760.firebasestorage.app",
+  messagingSenderId: "490421731819",
+  appId: "1:490421731819:web:7eabf3557174e451bf19ae"
+};
+const ADMIN_EMAIL = "otbi531@gmail.com"; // بريد المشرف: يوثّق الإعلانات ويحذف أي إعلان
+/* ======================================================= */
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, limit, serverTimestamp, getCountFromServer, onSnapshot, runTransaction, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const app = document.getElementById('app');
+const CATS = ['عربي أصيل','سباق','جمال','قدرة وتحمل','قفز'];
+const SEXES = ['فحل','فرس','مهر','مهرة'];
+const COLORS = ['أشقر','كميت','أشهب','أدهم'];
+const CITIES = ['الرياض','جدة','مكة المكرمة','المدينة المنورة','الدمام','الأحساء','الطائف','القصيم','حائل','تبوك','أبها','أخرى'];
+const MAX_PHOTOS = 5;
+
+const I = {
+  search:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+  check:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>',
+  pin:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  back:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>',
+  share:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>',
+  video:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m22 8-6 4 6 4V8z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>',
+  phone:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>',
+  chat:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.4A8 8 0 1 1 21 12z"/></svg>',
+  camera:'<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#8A6A24" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/></svg>',
+  gavel:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8A6A24" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m14 13-7.5 7.5a2.1 2.1 0 0 1-3-3L11 10"/><path d="m16 16 6-6M8 8l6-6M9 7l8 8"/></svg>',
+  tools:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8A6A24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 12v6M9 15h6"/></svg>'
+};
+
+/* ============ أدوات مساعدة ============ */
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ar = n => Number(n).toLocaleString('ar-SA');
+const toEn = s => String(s ?? '').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+const digits = s => toEn(s).replace(/\D/g, '');
+const isUrl = s => /^https:\/\/\S+$/i.test(s || '');
+let toastTimer;
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),5000); }
+
+function ageText(h){
+  if(!h.birthYear) return '';
+  const y = new Date().getFullYear() - h.birthYear;
+  if(y < 1) return 'أقل من سنة';
+  if(y === 1) return 'سنة';
+  if(y === 2) return 'سنتان';
+  return ar(y) + (y <= 10 ? ' سنوات' : ' سنة');
+}
+function priceText(h){
+  if(h.method === 'offers') return 'على السوم';
+  return h.price ? ar(h.price) + ' ر.س' : 'السعر عند التواصل';
+}
+function waNumber(p){
+  let d = digits(p);
+  if(d.startsWith('00')) d = d.slice(2);
+  if(d.startsWith('05')) d = '966' + d.slice(1);
+  else if(d.length === 9 && d.startsWith('5')) d = '966' + d;
+  return d;
+}
+function loadImg(src){ return new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=src; }); }
+async function resize(src, max, q){
+  const img = await loadImg(src);
+  const s = Math.min(1, max / Math.max(img.width, img.height));
+  const c = document.createElement('canvas');
+  c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  return c.toDataURL('image/jpeg', q);
+}
+const loginPrompt = msg => `<div class="empty">${msg}<br><br><button class="btn primary" data-act="login">الدخول بحساب Google</button></div>`;
+
+/* ============ التشغيل ============ */
+if(firebaseConfig.apiKey.includes('ضع')){
+  app.innerHTML = '<div class="empty">الموقع غير مربوط بقاعدة البيانات بعد.<br>ضع إعدادات Firebase في أعلى الكود داخل ملف index.html.</div>';
+  throw new Error('Firebase config missing');
+}
+const fb = initializeApp(firebaseConfig);
+const auth = getAuth(fb);
+const db = getFirestore(fb);
+
+let user = null;
+let horsesCache = null;
+let filter = { cat:'الكل', q:'' };
+let current = null;          // الحصان المفتوح حالياً
+let draft = null, editingId = null, step = 1;
+
+const isAdmin = () => !!user && user.email === ADMIN_EMAIL;
+const emptyDraft = () => ({
+  name:'', category:CATS[0], sex:SEXES[0], birthYear:'', color:COLORS[0], city:'', regNo:'',
+  photos:[], videoUrl:'',
+  sire:'', dam:'', sireSire:'', sireDam:'', damSire:'', damDam:'', achievements:'',
+  method:'fixed', price:'', negotiable:false, desc:'',
+  sellerName: user?.displayName || '', phone:'', whatsapp:''
+});
+
+function renderAuth(){
+  document.getElementById('authBox').innerHTML = user
+    ? `<button class="btn sm" data-act="logout">خروج</button>`
+    : `<button class="btn sm outline" data-act="login">دخول</button>`;
+}
+getRedirectResult(auth).catch(e => { console.error(e); if(e && e.code) toast('تعذّر الدخول (' + e.code + ')'); });
+onAuthStateChanged(auth, u => { user = u; renderAuth(); route(); });
+
+window.addEventListener('hashchange', route);
+function route(){
+  const parts = (location.hash.slice(1) || '/').split('/').filter(Boolean);
+  const page = parts[0] || 'home';
+  document.querySelectorAll('nav.bottom a').forEach(a => a.classList.toggle('on', a.dataset.nav === page));
+  window.scrollTo(0, 0);
+  cleanup();
+  document.querySelectorAll('nav.bottom a').forEach(a => a.classList.toggle('on', a.dataset.nav === (page === 'auction' ? 'auctions' : page)));
+  if(page === 'auctions') return viewAuctions();
+  if(page === 'auction') return viewAuction(parts[1]);
+  if(page === 'auction-new') return viewAuctionNew(parts[1]);
+  if(page === 'bank') return viewBank();
+  if(page === 'horse') return viewHorse(parts[1]);
+  if(page === 'add') return viewAdd(parts[1]);
+  if(page === 'mine') return viewMine();
+  if(page === 'stable') return parts[1] === 'edit' ? viewStableEdit() : viewStable(parts[1]);
+  return viewHome();
+}
+
+/* ============ الرئيسية ============ */
+async function viewHome(){
+  app.innerHTML = `
+    <div class="hero-logo"><img src="logo.jpg" alt="صهيل، كل ما يخص الخيل"></div>
+    <label class="search">${I.search}<input id="q" type="search" aria-label="بحث" placeholder="ابحث باسم الخيل أو النسب أو المدينة" value="${esc(filter.q)}"></label>
+    <div class="chips">${['الكل', ...CATS].map(c => `<button class="chip ${filter.cat===c?'on':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+    <div class="soon">
+      <a href="#/auctions">${I.gavel}<span>المزادات المباشرة<small>زايد على أفضل الخيول</small></span></a>
+      <button data-act="soon">${I.tools}<span>خدمات الخيل<small>قريباً</small></span></button>
+    </div>
+    <h2 class="h2">الخيول المعروضة</h2>
+    <div id="grid" class="grid"></div>`;
+  document.getElementById('q').addEventListener('input', e => { filter.q = e.target.value.trim(); renderGrid(); });
+  if(!horsesCache){
+    document.getElementById('grid').innerHTML = '<div class="empty" style="grid-column:1/-1">جارٍ التحميل…</div>';
+    try{
+      const snap = await getDocs(query(collection(db,'horses'), orderBy('createdAt','desc'), limit(100)));
+      horsesCache = snap.docs.map(d => ({ id:d.id, ...d.data() })).filter(h => h.status !== 'sold');
+    }catch(e){
+      console.error(e);
+      const g = document.getElementById('grid');
+      if(g) g.innerHTML = '<div class="empty" style="grid-column:1/-1">تعذّر تحميل الإعلانات. تحقق من الاتصال ثم حدّث الصفحة.</div>';
+      return;
+    }
+  }
+  renderGrid();
+}
+function renderGrid(){
+  const g = document.getElementById('grid'); if(!g || !horsesCache) return;
+  const q = filter.q;
+  const list = horsesCache
+    .filter(h => filter.cat === 'الكل' || h.category === filter.cat)
+    .filter(h => !q || [h.name,h.city,h.sire,h.dam,h.category].some(v => (v||'').includes(q)))
+    .sort((a,b) => (b.verified?1:0) - (a.verified?1:0));
+  g.innerHTML = list.length ? list.map(card).join('')
+    : `<div class="empty" style="grid-column:1/-1">لا توجد خيول بهذا البحث.<br><br><a class="btn primary" href="#/add">أضف إعلانك</a></div>`;
+}
+function card(h){
+  const meta = [h.category, h.sex, ageText(h)].filter(Boolean).join('، ');
+  return `<a class="card" href="#/horse/${h.id}">
+    <div class="ph">${h.thumb ? `<img src="${h.thumb}" alt="" loading="lazy">` : 'لا توجد صورة'}
+      ${h.status === 'sold' ? '<span class="badge sold">مباع</span>' : h.verified ? `<span class="badge">${I.check}موثّق</span>` : ''}</div>
+    <div class="cb"><b>${esc(h.name)}</b><span class="meta">${esc(meta)}</span>
+      <span class="meta">${esc(h.city)}</span><span class="price">${priceText(h)}</span></div></a>`;
+}
+
+/* ============ ملف الحصان ============ */
+async function viewHorse(id){
+  app.innerHTML = '<div class="empty">جارٍ التحميل…</div>';
+  let h, photos = [], contact = null, stable = null;
+  try{
+    const s = await getDoc(doc(db,'horses',id));
+    if(!s.exists()){ app.innerHTML = '<div class="empty">هذا الإعلان غير موجود أو حُذف.<br><br><a class="btn" href="#/">العودة للرئيسية</a></div>'; return; }
+    h = { id, ...s.data() };
+    const [p, c, st] = await Promise.all([
+      getDoc(doc(db,'horsePhotos',id)),
+      user ? getDoc(doc(db,'contacts',id)) : Promise.resolve(null),
+      h.ownerUid ? getDoc(doc(db,'stables',h.ownerUid)).catch(() => null) : Promise.resolve(null)
+    ]);
+    if(st && st.exists()) stable = st.data();
+    if(p.exists()) photos = p.data().photos || [];
+    if(c && c.exists()) contact = c.data();
+  }catch(e){ console.error(e); app.innerHTML = '<div class="empty">تعذّر تحميل الإعلان. حدّث الصفحة وحاول مرة أخرى.</div>'; return; }
+  current = h;
+  const own = user && user.uid === h.ownerUid;
+  const hasPed = h.sire || h.dam;
+  const pv = v => esc(v) || '—';
+
+  app.innerHTML = `
+  <div class="hero">
+    ${photos.length ? `<div class="gallery">${photos.map((p,i) => `<img src="${p}" alt="صورة ${i+1} لـ${esc(h.name)}">`).join('')}</div>` : '<div class="ph">لا توجد صور</div>'}
+    <a class="fab r" href="#/" aria-label="رجوع">${I.back}</a>
+    <button class="fab l" data-act="share" aria-label="مشاركة">${I.share}</button>
+    ${photos.length > 1 ? `<span class="pcount">${ar(photos.length)} صور، اسحب للمزيد</span>` : ''}
+  </div>
+  <div class="hd"><h1>${esc(h.name)}</h1>
+    ${h.verified ? `<span class="badge">${I.check}موثّق</span>` : ''}
+    ${h.status === 'sold' ? '<span class="badge sold">مباع</span>' : ''}</div>
+  <div class="tags">${[h.category, h.sex, ageText(h), h.color].filter(Boolean).map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
+  <div class="loc">${I.pin}${esc(h.city)}</div>
+
+  <div class="box pricebox"><span class="meta">السعر</span><b>${priceText(h)}</b>
+    ${h.negotiable ? '<span class="meta">قابل للتفاوض</span>' : ''}
+    ${h.method === 'offers' ? '<span class="meta">تواصل مع البائع لتقديم سومك</span>' : ''}</div>
+
+  ${isUrl(h.videoUrl) ? `<a class="btn block" style="margin-bottom:14px" href="${esc(h.videoUrl)}" target="_blank" rel="noopener">${I.video}شاهد فيديو الخيل</a>` : ''}
+
+  ${hasPed ? `
+  <div class="sec"><h2>النسب</h2>${h.regNo ? `<span class="meta">رقم التسجيل: ${esc(h.regNo)}</span>` : ''}</div>
+  <div class="ped">
+    <div class="col"><div class="main"><span>الأب</span><b>${pv(h.sire)}</b></div>
+      <div class="sub"><div><span>أبو الأب</span>${pv(h.sireSire)}</div><div><span>أم الأب</span>${pv(h.sireDam)}</div></div></div>
+    <div class="col"><div class="main f"><span>الأم</span><b>${pv(h.dam)}</b></div>
+      <div class="sub"><div><span>أبو الأم</span>${pv(h.damSire)}</div><div><span>أم الأم</span>${pv(h.damDam)}</div></div></div>
+  </div>` : ''}
+
+  ${h.achievements ? `<div class="sec"><h2>الإنجازات</h2></div><div class="box"><p class="text">${esc(h.achievements)}</p></div>` : ''}
+  ${h.desc ? `<div class="sec"><h2>عن الخيل</h2></div><div class="box"><p class="text">${esc(h.desc)}</p></div>` : ''}
+
+  <div class="sec"><h2>البائع</h2></div>
+  <div class="box">
+    <a class="seller" href="#/stable/${h.ownerUid}" style="text-decoration:none;color:inherit">
+      <span class="av">${stable?.logo ? `<img src="${stable.logo}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:24px">` : esc(((stable?.name || h.sellerName || 'ص').trim()[0]))}</span>
+      <div style="flex:1"><b>${esc(stable?.name || h.sellerName || 'بائع على صهيل')}</b>
+        ${stable?.verified ? `<span class="badge" style="margin-right:6px">${I.check}موثّق</span>` : ''}
+        <div class="meta">${esc(stable?.city || h.city)}</div></div>
+      <span class="meta" style="color:var(--accent);font-weight:600">الصفحة</span></a>
+    <div style="margin-top:14px">${
+      !user ? `<p class="meta" style="margin:0 0 10px">سجّل الدخول لعرض رقم البائع والتواصل معه.</p><button class="btn primary block" data-act="login">الدخول بحساب Google</button>`
+      : contact ? `<div style="display:flex;gap:10px">
+          <a class="btn primary" style="flex:1" href="https://wa.me/${waNumber(contact.whatsapp || contact.phone)}?text=${encodeURIComponent('السلام عليكم، بخصوص إعلان «' + h.name + '» في صهيل')}" target="_blank" rel="noopener">${I.chat}واتساب</a>
+          <a class="btn" style="width:120px" href="tel:${esc(digits(contact.phone))}">${I.phone}اتصال</a></div>`
+      : '<p class="meta" style="margin:0">لا توجد بيانات تواصل لهذا الإعلان.</p>'
+    }</div>
+  </div>
+
+  ${own ? `<div class="sec"><h2>إدارة إعلانك</h2></div><div class="actions">
+    <a class="btn outline" href="#/add/${h.id}">تعديل</a>
+    <button class="btn" data-act="sold">${h.status === 'sold' ? 'إعادة عرضه للبيع' : 'تحديد كمباع'}</button>
+    <button class="btn danger" data-act="del">حذف الإعلان</button></div>` : ''}
+
+  ${isAdmin() ? `<div class="box admin"><b>أدوات المشرف</b>
+    <div class="actions" style="margin-bottom:0;margin-top:10px">
+    <button class="btn outline" data-act="verify">${h.verified ? 'إلغاء التوثيق' : 'توثيق الإعلان'}</button>
+    <a class="btn outline" href="#/auction-new/${h.id}">إنشاء مزاد لهذا الخيل</a>
+    ${own ? '' : `<a class="btn" href="#/add/${h.id}">تعديل</a><button class="btn danger" data-act="del">حذف</button>`}</div></div>` : ''}
+  `;
+}
+
+/* ============ إضافة / تعديل إعلان ============ */
+async function viewAdd(id){
+  if(!user){ app.innerHTML = loginPrompt('سجّل الدخول لإضافة إعلان خيل.'); return; }
+  if(id){
+    if(editingId !== id){
+      app.innerHTML = '<div class="empty">جارٍ التحميل…</div>';
+      try{
+        const [s,p,c] = await Promise.all([getDoc(doc(db,'horses',id)), getDoc(doc(db,'horsePhotos',id)), getDoc(doc(db,'contacts',id))]);
+        if(!s.exists() || (s.data().ownerUid !== user.uid && !isAdmin())){ app.innerHTML = '<div class="empty">لا يمكنك تعديل هذا الإعلان.</div>'; return; }
+        const h = s.data();
+        draft = { ...emptyDraft(), ...h,
+          birthYear: h.birthYear ? String(h.birthYear) : '', price: h.price != null ? String(h.price) : '',
+          photos: p.exists() ? (p.data().photos || []) : [],
+          phone: c.exists() ? c.data().phone : '', whatsapp: c.exists() ? c.data().whatsapp : '' };
+        editingId = id; step = 1;
+      }catch(e){ console.error(e); app.innerHTML = '<div class="empty">تعذّر تحميل الإعلان للتعديل.</div>'; return; }
+    }
+  }else if(editingId || !draft){
+    draft = emptyDraft(); editingId = null; step = 1;
+  }
+  renderStep();
+}
+
+function collect(){
+  app.querySelectorAll('[data-f]').forEach(el => { draft[el.dataset.f] = el.type === 'checkbox' ? el.checked : el.value.trim(); });
+}
+const opt = (list, val) => list.map(v => `<option ${v === val ? 'selected' : ''}>${esc(v)}</option>`).join('');
+const field = (label, f, ph, extra='') => `<label class="f">${label}<input class="in" data-f="${f}" value="${esc(draft[f])}" placeholder="${ph}" ${extra}></label>`;
+
+function renderStep(){
+  const d = draft;
+  const labels = ['البيانات','الصور','النسب','السعر'];
+  let body = '';
+  if(step === 1){
+    body = `
+      ${field('اسم الخيل','name','مثال: شاهين','maxlength="40"')}
+      <div class="f"><span>الفئة</span><div class="chips wrap">${CATS.map(c => `<button type="button" class="chip ${d.category===c?'on':''}" data-set="category" data-val="${esc(c)}">${esc(c)}</button>`).join('')}</div></div>
+      <div class="f"><span>الجنس</span><div class="seg">${SEXES.map(s => `<button type="button" class="${d.sex===s?'on':''}" data-set="sex" data-val="${s}">${s}</button>`).join('')}</div></div>
+      <div class="two">
+        ${field('سنة الميلاد','birthYear','مثال: 2021','inputmode="numeric" maxlength="4"')}
+        <label class="f">اللون<select class="in" data-f="color">${opt(COLORS, d.color)}</select></label>
+      </div>
+      <label class="f">المدينة<select class="in" data-f="city"><option value="">اختر المدينة</option>${opt(CITIES, d.city)}</select></label>
+      ${field('رقم التسجيل في سجل الأنساب <span class="opt">(اختياري)</span>','regNo','رقم شهادة التسجيل')}
+      <div class="note">أضف رقم التسجيل ليراجعه فريق صهيل ويمنح إعلانك شارة «موثّق»، فيظهر أولاً في البحث.</div>`;
+  }
+  if(step === 2){
+    body = `
+      <label class="upload">${I.camera}<b>${d.photos.length ? 'أضف صوراً أخرى' : 'أضف صور الخيل'}</b>
+        <span>حتى ${ar(MAX_PHOTOS)} صور. اجعل الأولى صورة جانبية كاملة</span>
+        <input id="files" type="file" accept="image/*" multiple hidden></label>
+      ${d.photos.length ? `<div class="thumbs">${d.photos.map((p,i) => `<div><img src="${p}" alt="صورة ${i+1}">
+        <button type="button" class="x" data-act="rmPhoto" data-i="${i}" aria-label="حذف الصورة">×</button>
+        ${i === 0 ? '<span class="cv" style="cursor:default">الغلاف</span>' : `<button type="button" class="cv" data-act="cover" data-i="${i}">اجعلها الغلاف</button>`}</div>`).join('')}</div>` : ''}
+      ${field('رابط فيديو الخيل <span class="opt">(يوتيوب، تيك توك، إنستغرام…)</span>','videoUrl','https://','inputmode="url" dir="ltr"')}
+      <div class="note">صوّر في ضوء النهار وبخلفية بسيطة، والخيل واقف بوضعية كاملة تظهر فيها القوائم الأربع.</div>`;
+  }
+  if(step === 3){
+    body = `
+      <div class="two">${field('الأب','sire','اسم الأب')}${field('الأم','dam','اسم الأم')}</div>
+      <div class="two">${field('أبو الأب','sireSire','')}${field('أم الأب','sireDam','')}</div>
+      <div class="two">${field('أبو الأم','damSire','')}${field('أم الأم','damDam','')}</div>
+      <label class="f">الإنجازات والبطولات <span class="opt">(اختياري، كل إنجاز في سطر)</span>
+        <textarea class="in" rows="3" data-f="achievements" placeholder="مثال: المركز الأول، بطولة … 2025">${esc(d.achievements)}</textarea></label>`;
+  }
+  if(step === 4){
+    body = `
+      <div class="f"><span>طريقة البيع</span><div class="seg" style="--n:2">
+        <button type="button" class="${d.method==='fixed'?'on':''}" data-set="method" data-val="fixed">سعر محدد</button>
+        <button type="button" class="${d.method==='offers'?'on':''}" data-set="method" data-val="offers">على السوم</button></div></div>
+      ${d.method === 'fixed' ? `${field('السعر (ر.س)','price','مثال: 85000','inputmode="numeric"')}
+        <label class="check"><input type="checkbox" data-f="negotiable" ${d.negotiable ? 'checked' : ''}>قابل للتفاوض</label>`
+        : '<div class="note">يتواصل معك المشترون بعروضهم، وتختار الأنسب.</div>'}
+      <label class="f">وصف الخيل <span class="opt">(الطباع، التدريب، الحالة الصحية)</span>
+        <textarea class="in" rows="4" data-f="desc">${esc(d.desc)}</textarea></label>
+      ${field('اسمك أو اسم المربط','sellerName','يظهر في الإعلان')}
+      <div class="two">
+        ${field('رقم الجوال','phone','05xxxxxxxx','inputmode="tel" dir="ltr"')}
+        ${field('واتساب <span class="opt">(إن اختلف)</span>','whatsapp','05xxxxxxxx','inputmode="tel" dir="ltr"')}
+      </div>
+      <p class="meta" style="margin:-6px 0 16px">رقمك يظهر فقط للمستخدمين المسجّلين.</p>`;
+  }
+  app.innerHTML = `
+    <h1 class="h1">${editingId ? 'تعديل الإعلان' : 'إضافة إعلان'}</h1>
+    <div class="steps">${labels.map((l,i) => `<div class="${i < step ? 'on' : ''} ${i === step-1 ? 'cur' : ''}"><i></i>${l}</div>`).join('')}</div>
+    ${body}
+    <div class="wact">
+      ${step > 1 ? '<button class="btn" data-act="prev">السابق</button>' : ''}
+      ${step < 4 ? `<button class="btn primary" data-act="next">التالي: ${labels[step]}</button>`
+                 : `<button class="btn primary" data-act="publish">${editingId ? 'حفظ التعديلات' : 'نشر الإعلان'}</button>`}
+    </div>`;
+  if(step === 2) document.getElementById('files').addEventListener('change', onFiles);
+}
+
+async function onFiles(e){
+  collect();
+  const files = [...e.target.files];
+  const room = MAX_PHOTOS - draft.photos.length;
+  if(room <= 0){ toast(`الحد الأقصى ${ar(MAX_PHOTOS)} صور`); return; }
+  if(files.length > room) toast(`أُضيفت أول ${ar(room)} صور فقط`);
+  else toast('جارٍ تجهيز الصور…');
+  for(const f of files.slice(0, room)){
+    try{ const url = URL.createObjectURL(f); draft.photos.push(await resize(url, 900, 0.65)); URL.revokeObjectURL(url); }
+    catch(err){ toast('تعذّرت قراءة إحدى الصور، جرّب صورة بصيغة JPG'); }
+  }
+  renderStep();
+}
+
+function validate(s){
+  const d = draft;
+  if(s === 1){
+    if(!d.name) return 'اكتب اسم الخيل';
+    if(!d.city) return 'اختر المدينة';
+    if(d.birthYear){ const y = Number(digits(d.birthYear)); if(y < 1990 || y > new Date().getFullYear()) return 'سنة الميلاد غير صحيحة'; }
+  }
+  if(s === 2){
+    if(!d.photos.length) return 'أضف صورة واحدة على الأقل';
+    if(d.videoUrl && !isUrl(d.videoUrl)) return 'رابط الفيديو يجب أن يبدأ بـ https://';
+  }
+  if(s === 4){
+    if(d.method === 'fixed' && !Number(digits(d.price))) return 'اكتب السعر أو اختر «على السوم»';
+    if(digits(d.phone).length < 9) return 'اكتب رقم جوال صحيح';
+  }
+  return '';
+}
+
+/* ============ إعلاناتي ============ */
+async function viewMine(){
+  if(!user){ app.innerHTML = loginPrompt('سجّل الدخول لعرض إعلاناتك.'); return; }
+  app.innerHTML = `<h1 class="h1">إعلاناتي</h1>
+    <div class="mystable"><span class="av">${esc((user.displayName || 'ص').trim()[0])}</span>
+      <div class="mi"><b>صفحة مربطك</b><div class="meta">اسم المربط وشعاره ونبذة عنه، تظهر في كل إعلاناتك</div></div>
+      <a class="btn sm" href="#/stable/${user.uid}">عرض</a><a class="btn sm outline" href="#/stable/edit">تعديل</a></div>
+    <div id="mine"><div class="empty">جارٍ التحميل…</div></div>`;
+  try{
+    const snap = await getDocs(query(collection(db,'horses'), where('ownerUid','==',user.uid)));
+    const list = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+    const el = document.getElementById('mine'); if(!el) return;
+    el.innerHTML = list.length ? list.map(h => `
+      <div class="mrow">
+        <a class="ph" href="#/horse/${h.id}">${h.thumb ? `<img src="${h.thumb}" alt="">` : ''}</a>
+        <a class="mi" href="#/horse/${h.id}" style="text-decoration:none;color:inherit"><b>${esc(h.name)}</b>
+          <span class="meta">${h.status === 'sold' ? 'مباع' : 'معروض'}${h.verified ? '، موثّق' : ''}</span>
+          <span class="price">${priceText(h)}</span></a>
+        <a class="btn sm" href="#/add/${h.id}">تعديل</a>
+      </div>`).join('')
+      : '<div class="empty">لم تضف أي إعلان بعد.<br><br><a class="btn primary" href="#/add">أضف أول إعلان</a></div>';
+  }catch(e){ console.error(e); const el=document.getElementById('mine'); if(el) el.innerHTML = '<div class="empty">تعذّر تحميل إعلاناتك.</div>'; }
+}
+
+/* ============ صفحة المربط ============ */
+let stableTab = 0, currentStable = null, stableDraft = null;
+
+async function viewStable(uid){
+  if(!uid){ location.hash = '#/'; return; }
+  app.innerHTML = '<div class="empty">جارٍ التحميل…</div>';
+  let s = null, horses = [], followers = 0, following = false, contact = null;
+  try{
+    const [sd, hs, fc, mf, ct] = await Promise.all([
+      getDoc(doc(db,'stables',uid)),
+      getDocs(query(collection(db,'horses'), where('ownerUid','==',uid))),
+      getCountFromServer(collection(db,'stables',uid,'followers')).catch(() => null),
+      user ? getDoc(doc(db,'stables',uid,'followers',user.uid)).catch(() => null) : Promise.resolve(null),
+      user ? getDoc(doc(db,'stableContacts',uid)).catch(() => null) : Promise.resolve(null)
+    ]);
+    if(sd.exists()) s = sd.data();
+    horses = hs.docs.map(d => ({ id:d.id, ...d.data() })).sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+    followers = fc ? fc.data().count : 0;
+    following = !!(mf && mf.exists());
+    if(ct && ct.exists()) contact = ct.data();
+  }catch(e){ console.error(e); app.innerHTML = '<div class="empty">تعذّر تحميل صفحة المربط.</div>'; return; }
+
+  const own = user && user.uid === uid;
+  if(!s && !horses.length){
+    app.innerHTML = own
+      ? '<div class="empty">لم تُنشئ صفحة مربطك بعد.<br><br><a class="btn primary" href="#/stable/edit">أنشئ صفحة المربط</a></div>'
+      : '<div class="empty">هذه الصفحة غير موجودة.<br><br><a class="btn" href="#/">العودة للرئيسية</a></div>';
+    return;
+  }
+  currentStable = { uid, ...(s || {}), followers, following };
+  const name = s?.name || horses[0]?.sellerName || 'بائع على صهيل';
+  const active = horses.filter(h => h.status !== 'sold');
+  const sold = horses.filter(h => h.status === 'sold');
+  const list = stableTab === 0 ? active : sold;
+  const since = s?.createdAt?.seconds ? new Date(s.createdAt.seconds * 1000).getFullYear() : null;
+  const wa = contact && (contact.whatsapp || contact.phone);
+
+  app.innerHTML = `
+    <div class="st-head">
+      <span class="st-logo">${s?.logo ? `<img src="${s.logo}" alt="شعار ${esc(name)}">` : esc(name.trim()[0])}</span>
+      <div style="min-width:0">
+        <h1>${esc(name)}</h1>
+        ${s?.verified ? `<span class="badge">${I.check}مربط موثّق</span>` : ''}
+        <div class="loc" style="margin:6px 0 0">${I.pin}${esc(s?.city || horses[0]?.city || '')}${since ? `، عضو منذ ${ar(since).replace(/٬/g,'')}` : ''}</div>
+      </div>
+    </div>
+    ${s?.bio ? `<p class="st-bio">${esc(s.bio)}</p>` : ''}
+
+    <div class="st-btns">${
+      own ? '<a class="btn outline" href="#/stable/edit">تعديل صفحتي</a><button class="btn" data-act="share">مشاركة</button>'
+      : !user ? '<button class="btn primary" data-act="login">ادخل للمتابعة والتواصل</button>'
+      : `<button class="btn ${following ? 'outline' : 'primary'}" data-act="follow">${following ? 'تتابعه' : 'متابعة'}</button>
+         ${wa ? `<a class="btn" href="https://wa.me/${waNumber(wa)}?text=${encodeURIComponent('السلام عليكم، وصلت لصفحتكم عبر صهيل')}" target="_blank" rel="noopener">${I.chat}واتساب</a>
+         <a class="btn" style="flex:0 0 52px;padding:0" href="tel:${esc(digits(contact.phone))}" aria-label="اتصال">${I.phone}</a>` : ''}`
+    }</div>
+
+    <div class="stats">
+      <div><b>${ar(active.length)}</b><span class="meta">معروضة</span></div>
+      <div><b>${ar(followers)}</b><span class="meta">متابع</span></div>
+      <div><b>${ar(sold.length)}</b><span class="meta">مباعة</span></div>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button role="tab" class="${stableTab===0?'on':''}" data-act="stab" data-i="0">الخيول المعروضة</button>
+      <button role="tab" class="${stableTab===1?'on':''}" data-act="stab" data-i="1">المباعة</button>
+    </div>
+    <div class="grid">${list.length ? list.map(card).join('')
+      : `<div class="empty" style="grid-column:1/-1">${stableTab===0 ? 'لا توجد خيول معروضة حالياً.' : 'لا توجد خيول مباعة بعد.'}${own && stableTab===0 ? '<br><br><a class="btn primary" href="#/add">أضف إعلاناً</a>' : ''}</div>`}</div>
+
+    ${isAdmin() && s ? `<div class="box admin" style="margin-top:20px"><b>أدوات المشرف</b>
+      <div class="actions" style="margin:10px 0 0"><button class="btn outline" data-act="verifyStable">${s.verified ? 'إلغاء توثيق المربط' : 'توثيق المربط'}</button></div></div>` : ''}
+  `;
+}
+
+async function viewStableEdit(){
+  if(!user){ app.innerHTML = loginPrompt('سجّل الدخول لتعديل صفحة مربطك.'); return; }
+  app.innerHTML = '<div class="empty">جارٍ التحميل…</div>';
+  try{
+    const [sd, ct] = await Promise.all([getDoc(doc(db,'stables',user.uid)), getDoc(doc(db,'stableContacts',user.uid))]);
+    const s = sd.exists() ? sd.data() : {};
+    const c = ct.exists() ? ct.data() : {};
+    stableDraft = { exists: sd.exists(), name: s.name || user.displayName || '', city: s.city || '', bio: s.bio || '', logo: s.logo || '',
+      phone: c.phone || '', whatsapp: c.whatsapp && c.whatsapp !== c.phone ? c.whatsapp : '' };
+  }catch(e){ console.error(e); app.innerHTML = '<div class="empty">تعذّر تحميل بيانات المربط.</div>'; return; }
+  renderStableEdit();
+}
+function renderStableEdit(){
+  const d = stableDraft;
+  const f = (label, k, ph, extra='') => `<label class="f">${label}<input class="in" data-sf="${k}" value="${esc(d[k])}" placeholder="${ph}" ${extra}></label>`;
+  app.innerHTML = `
+    <h1 class="h1">${d.exists ? 'تعديل صفحة المربط' : 'إنشاء صفحة المربط'}</h1>
+    <div class="logo-up">
+      <span class="st-logo" id="logoPrev">${d.logo ? `<img src="${d.logo}" alt="">` : esc((d.name || 'م').trim()[0])}</span>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label class="btn sm outline" style="cursor:pointer">${d.logo ? 'تغيير الشعار' : 'أضف شعار المربط'}<input id="logoFile" type="file" accept="image/*" hidden></label>
+        ${d.logo ? '<button class="btn sm danger" data-act="rmLogo">حذف الشعار</button>' : ''}
+      </div>
+    </div>
+    ${f('اسم المربط','name','مثال: مربط الأصايل','maxlength="50"')}
+    <label class="f">المدينة<select class="in" data-sf="city"><option value="">اختر المدينة</option>${opt(CITIES, d.city)}</select></label>
+    <label class="f">نبذة عن المربط <span class="opt">(تاريخه، السلالات، أبرز الإنتاج)</span>
+      <textarea class="in" rows="4" data-sf="bio" maxlength="600">${esc(d.bio)}</textarea></label>
+    <div class="two">
+      ${f('رقم الجوال','phone','05xxxxxxxx','inputmode="tel" dir="ltr"')}
+      ${f('واتساب <span class="opt">(إن اختلف)</span>','whatsapp','05xxxxxxxx','inputmode="tel" dir="ltr"')}
+    </div>
+    <p class="meta" style="margin:-6px 0 16px">الرقم يظهر فقط للمستخدمين المسجّلين.</p>
+    <div class="wact"><a class="btn" href="#/mine">إلغاء</a><button class="btn primary" data-act="saveStable">حفظ الصفحة</button></div>`;
+  document.getElementById('logoFile').addEventListener('change', async e => {
+    collectStable();
+    const file = e.target.files[0]; if(!file) return;
+    try{ const url = URL.createObjectURL(file); stableDraft.logo = await resize(url, 320, 0.75); URL.revokeObjectURL(url); renderStableEdit(); }
+    catch(err){ toast('تعذّرت قراءة الصورة، جرّب صورة بصيغة JPG'); }
+  });
+}
+function collectStable(){ app.querySelectorAll('[data-sf]').forEach(el => { stableDraft[el.dataset.sf] = el.value.trim(); }); }
+
+/* ============ المزادات ============ */
+const AUCTION_INCS = [5000, 10000, 25000];
+let subs = [], ticker = null, curAuction = null, myEntry = null, bidInc = 0, entryDraft = null;
+function cleanup(){ subs.forEach(u => { try{ u(); }catch(e){} }); subs = []; clearInterval(ticker); ticker = null; }
+const sar = n => ar(n) + ' ر.س';
+function alias(uid){ let h = 0; for(const c of String(uid)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return 'مزايد ' + ar(100 + h % 900).replace(/٬/g,''); }
+const endMs = a => a.endAt?.toMillis ? a.endAt.toMillis() : 0;
+const startMs = a => a.startAt?.toMillis ? a.startAt.toMillis() : 0;
+function phase(a){
+  const now = Date.now();
+  if(a.status === 'closed' || now >= endMs(a)) return 'ended';
+  if(startMs(a) && now < startMs(a)) return 'upcoming';
+  return 'live';
+}
+function left(ms){
+  if(ms <= 0) return 'انتهى';
+  const s = Math.floor(ms/1000), d = Math.floor(s/86400), h = Math.floor(s%86400/3600), m = Math.floor(s%3600/60), x = s%60;
+  const p = n => String(n).padStart(2,'0');
+  return d ? `${d}ي ${p(h)}:${p(m)}` : `${p(h)}:${p(m)}:${p(x)}`;
+}
+const liveBadge = a => { const ph = phase(a); return ph === 'live' ? '<span class="live"><i></i>مباشر</span>' : ph === 'upcoming' ? '<span class="live soon">قريباً</span>' : '<span class="live off">انتهى</span>'; };
+async function getBank(){ try{ const s = await getDoc(doc(db,'settings','bank')); return s.exists() ? s.data() : {}; }catch(e){ return {}; } }
+
+async function viewAuctions(){
+  app.innerHTML = `<h1 class="h1">المزادات</h1>
+    <p class="meta" style="margin:-8px 0 16px;line-height:1.7">رسوم دخول كل مزاد ٢٠٠ ر.س غير مستردة، تُدفع بتحويل بنكي ويُفتح لك باب المزايدة بعد مراجعة الإيصال.</p>
+    ${isAdmin() ? '<div class="actions" style="margin-top:0"><a class="btn sm" href="#/bank">بيانات الحساب البنكي</a></div>' : ''}
+    <div id="alist" class="grid"><div class="empty" style="grid-column:1/-1">جارٍ التحميل…</div></div>`;
+  try{
+    const snap = await getDocs(query(collection(db,'auctions'), orderBy('endAt','desc'), limit(50)));
+    const list = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+    const rank = a => ({ live:0, upcoming:1, ended:2 })[phase(a)];
+    list.sort((a,b) => rank(a) - rank(b) || (rank(a) === 2 ? endMs(b) - endMs(a) : endMs(a) - endMs(b)));
+    const el = document.getElementById('alist'); if(!el) return;
+    el.innerHTML = list.length ? list.map(a => `
+      <a class="card" href="#/auction/${a.id}">
+        <div class="ph">${a.thumb ? `<img src="${a.thumb}" alt="" loading="lazy">` : 'لا توجد صورة'}${liveBadge(a)}</div>
+        <div class="cb"><b>${esc(a.horseName)}</b><span class="meta">${esc([a.category, a.city].filter(Boolean).join('، '))}</span>
+          <span class="meta">${a.bidCount ? 'أعلى مزايدة' : 'سعر الافتتاح'}</span>
+          <span class="price">${sar(a.bidCount ? a.currentBid : a.startPrice)}</span>
+          <span class="meta" data-end="${endMs(a)}" data-start="${startMs(a)}"></span></div></a>`).join('')
+      : '<div class="empty" style="grid-column:1/-1">لا توجد مزادات حالياً.<br>تابعنا، تُعلن المزادات القادمة هنا.</div>';
+    const tick = () => document.querySelectorAll('[data-end]').forEach(s => {
+      const now = Date.now(), st = Number(s.dataset.start), en = Number(s.dataset.end);
+      s.textContent = st && now < st ? 'يبدأ خلال ' + left(st - now) : now < en ? 'ينتهي خلال ' + left(en - now) : '';
+    });
+    tick(); ticker = setInterval(tick, 1000);
+  }catch(e){ console.error(e); const el = document.getElementById('alist'); if(el) el.innerHTML = '<div class="empty" style="grid-column:1/-1">تعذّر تحميل المزادات.</div>'; }
+}
+
+async function viewAuction(id){
+  app.innerHTML = '<div class="empty">جارٍ التحميل…</div>';
+  curAuction = null; myEntry = null; bidInc = 0; entryDraft = null;
+  const bank = await getBank();
+  let bids = [], requests = [];
+  const render = () => { if(curAuction) renderAuction(bids, bank, requests); };
+  subs.push(onSnapshot(doc(db,'auctions',id), s => {
+    if(!s.exists()){ app.innerHTML = '<div class="empty">هذا المزاد غير موجود.<br><br><a class="btn" href="#/auctions">كل المزادات</a></div>'; return; }
+    curAuction = { id, ...s.data() }; render();
+  }, e => { console.error(e); app.innerHTML = '<div class="empty">تعذّر تحميل المزاد.</div>'; }));
+  subs.push(onSnapshot(query(collection(db,'auctions',id,'bids'), orderBy('at','desc'), limit(15)), s => {
+    bids = s.docs.map(d => d.data()); render();
+  }, e => console.error(e)));
+  if(user) subs.push(onSnapshot(doc(db,'auctions',id,'entries',user.uid), s => {
+    myEntry = s.exists() ? s.data() : null; render();
+  }, e => console.error(e)));
+  if(isAdmin()) subs.push(onSnapshot(collection(db,'auctions',id,'entries'), s => {
+    requests = s.docs.map(d => ({ uid:d.id, ...d.data() })).sort((a,b) => (a.status === 'pending' ? 0 : 1) - (b.status === 'pending' ? 0 : 1)); render();
+  }, e => console.error(e)));
+  ticker = setInterval(() => {
+    const el = document.getElementById('clock'); if(!el || !curAuction) return;
+    const ph = phase(curAuction), now = Date.now();
+    el.textContent = ph === 'upcoming' ? left(startMs(curAuction) - now) : left(endMs(curAuction) - now);
+    if(ph !== el.dataset.ph) render();
+  }, 1000);
+}
+
+function renderAuction(bids, bank, requests){
+  collectEntry();
+  const a = curAuction, ph = phase(a), now = Date.now();
+  const base = a.bidCount ? a.currentBid : a.startPrice;
+  const amounts = a.bidCount ? AUCTION_INCS.map(i => base + i) : [a.startPrice, ...AUCTION_INCS.slice(0,2).map(i => a.startPrice + i)];
+  if(bidInc >= amounts.length) bidInc = 0;
+  const iLead = user && a.currentBidder === user.uid && a.bidCount;
+  const fee = bank.fee || 200;
+  const keepScroll = window.scrollY;
+
+  let action = '';
+  if(ph === 'ended'){
+    action = a.bidCount
+      ? `<div class="ok">انتهى المزاد. ${iLead ? 'مبروك، أنت الفائز! سيتواصل معك فريق صهيل لإتمام البيع.' : `رسا المزاد على ${alias(a.currentBidder)} بمبلغ ${sar(a.currentBid)}.`}</div>`
+      : '<div class="note">انتهى المزاد بدون مزايدات.</div>';
+  }else if(!user){
+    action = `<button class="btn primary block" data-act="login">ادخل لتشارك في المزاد</button>`;
+  }else if(!myEntry || myEntry.status === 'rejected'){
+    const d = entryDraft || (entryDraft = { name: user.displayName || '', phone:'', receipt:'' });
+    action = `
+      ${myEntry?.status === 'rejected' ? `<div class="note" style="background:#F6DEDA;color:#8A1F14">رُفض طلبك السابق${myEntry.note ? ': ' + esc(myEntry.note) : ''}. يمكنك إرسال إيصال جديد.</div>` : ''}
+      <div class="bank">
+        <b style="font-size:16px">رسوم دخول المزاد: ${sar(fee)}</b>
+        <span class="meta" style="line-height:1.7">الرسوم غير مستردة، سواء فزت بالمزاد أم لا. حوّل المبلغ ثم ارفع صورة الإيصال.</span>
+        ${bank.iban ? `
+        <div class="row"><span class="meta">البنك</span><b>${esc(bank.bankName)}</b></div>
+        <div class="row"><span class="meta">اسم المستفيد</span><b style="direction:rtl;text-align:right">${esc(bank.holder)}</b></div>
+        <div class="row"><span class="meta">الآيبان</span><b>${esc(bank.iban)}</b></div>
+        <button class="btn sm" data-act="copyIban">نسخ الآيبان</button>`
+        : '<span class="meta">بيانات الحساب البنكي لم تُضف بعد.</span>'}
+      </div>
+      <label class="f">الاسم الكامل<input class="in" data-ef="name" value="${esc(d.name)}"></label>
+      <label class="f">رقم الجوال<input class="in" data-ef="phone" value="${esc(d.phone)}" inputmode="tel" dir="ltr" placeholder="05xxxxxxxx"></label>
+      <label class="upload" style="height:120px">${d.receipt ? `<img src="${d.receipt}" alt="الإيصال" style="height:100%;border-radius:10px">` : `${I.camera}<b>ارفع صورة إيصال التحويل</b>`}
+        <input id="receiptFile" type="file" accept="image/*" hidden></label>
+      <button class="btn primary block" data-act="sendEntry" ${bank.iban ? '' : 'disabled'}>إرسال طلب الدخول</button>`;
+  }else if(myEntry.status === 'pending'){
+    action = '<div class="note">وصلنا إيصالك وهو قيد المراجعة. يُفتح لك باب المزايدة فور قبوله، وتصلك الصفحة محدّثة تلقائياً.</div>';
+  }else if(ph === 'upcoming'){
+    action = '<div class="ok">تم قبول دخولك. تبدأ المزايدة مع بداية المزاد.</div>';
+  }else{
+    action = `
+      ${iLead ? '<div class="ok">أنت صاحب أعلى مزايدة الآن.</div>' : ''}
+      <div class="incs">${amounts.map((v,i) => `<button class="${bidInc===i?'on':''}" data-act="pickInc" data-i="${i}">${!a.bidCount && i===0 ? 'الافتتاح' : '+' + ar(v - base)}</button>`).join('')}</div>
+      <button class="btn primary block" style="height:54px;font-size:17px" data-act="bid" data-amount="${amounts[bidInc]}">زايد الآن بـ ${sar(amounts[bidInc])}</button>`;
+  }
+
+  app.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 12px">
+      <a class="btn sm" href="#/auctions">${I.back}المزادات</a>${liveBadge(a)}
+    </div>
+    <div class="ph" style="border-radius:18px;margin-bottom:14px">${a.thumb ? `<img src="${a.thumb}" alt="${esc(a.horseName)}">` : 'لا توجد صورة'}</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px">
+      <div><h1 style="margin:0;font-size:24px">${esc(a.horseName)}</h1><span class="meta">${esc([a.category, a.city].filter(Boolean).join('، '))}</span></div>
+      <a class="btn sm" href="#/horse/${a.horseId}">الملف والنسب</a>
+    </div>
+    ${isUrl(a.liveUrl) && ph !== 'ended' ? `<a class="btn block" style="margin-bottom:14px" href="${esc(a.liveUrl)}" target="_blank" rel="noopener">${I.video}شاهد البث المباشر</a>` : ''}
+    <div class="bidbox">
+      <div class="cur"><span>${a.bidCount ? 'أعلى مزايدة' : 'سعر الافتتاح'}</span><b>${sar(base)}</b>
+        <span>${a.bidCount ? `${ar(a.bidCount)} مزايدة، آخرها من ${iLead ? 'أنت' : alias(a.currentBidder)}` : 'لا مزايدات بعد'}</span></div>
+      <div class="clock"><span class="meta">${ph === 'upcoming' ? 'يبدأ خلال' : ph === 'live' ? 'ينتهي خلال' : 'الحالة'}</span>
+        <b id="clock" data-ph="${ph}">${ph === 'upcoming' ? left(startMs(a) - now) : left(endMs(a) - now)}</b></div>
+    </div>
+    ${action}
+    <h2 class="h2">سجل المزايدات</h2>
+    ${bids.length ? `<div class="hist">${bids.map(b => `<div class="${user && b.uid === user.uid ? 'me' : ''}"><span>${user && b.uid === user.uid ? 'أنت' : esc(b.alias)}</span><b>${sar(b.amount)}</b></div>`).join('')}</div>`
+      : '<p class="meta">لا توجد مزايدات بعد.</p>'}
+    ${isAdmin() ? `<div class="box admin" style="margin-top:20px"><b>أدوات المشرف</b>
+      <div class="actions" style="margin:10px 0 6px">
+        ${ph !== 'ended' ? '<button class="btn danger" data-act="closeAuction">إنهاء المزاد الآن</button>' : ''}
+        ${ph === 'ended' && a.bidCount ? '<button class="btn outline" data-act="markSold">تحديد الخيل كمباع</button>' : ''}
+        ${ph === 'ended' && a.bidCount ? `<button class="btn" data-act="winnerInfo">بيانات الفائز</button>` : ''}
+      </div>
+      <b style="display:block;margin:10px 0">طلبات الدخول (${ar(requests.filter(r => r.status === 'pending').length)} بانتظار المراجعة)</b>
+      ${requests.length ? requests.map(r => `<div class="req">
+        ${r.receipt ? `<img src="${r.receipt}" alt="إيصال ${esc(r.name)}" data-act="viewReceipt" data-uid="${r.uid}">` : ''}
+        <div class="mi"><b>${esc(r.name)}</b><span class="meta" dir="ltr" style="text-align:right">${esc(r.phone)}</span>
+          <span class="meta">${({pending:'بانتظار المراجعة', approved:'مقبول', rejected:'مرفوض'})[r.status]}، ${alias(r.uid)}</span></div>
+        ${r.status === 'pending' ? `<div style="display:flex;flex-direction:column;gap:6px">
+          <button class="btn sm primary" data-act="approve" data-uid="${r.uid}">قبول</button>
+          <button class="btn sm danger" data-act="reject" data-uid="${r.uid}">رفض</button></div>` : ''}
+      </div>`).join('') : '<p class="meta">لا توجد طلبات بعد.</p>'}
+    </div>` : ''}
+  `;
+  window.scrollTo(0, keepScroll);
+  const rf = document.getElementById('receiptFile');
+  if(rf) rf.addEventListener('change', async e => {
+    collectEntry(); const f = e.target.files[0]; if(!f) return;
+    try{ const url = URL.createObjectURL(f); entryDraft.receipt = await resize(url, 1100, 0.6); URL.revokeObjectURL(url); renderAuction(bids, bank, requests); }
+    catch(err){ toast('تعذّرت قراءة الصورة'); }
+  });
+  renderAuction.last = [bids, bank, requests];
+}
+function collectEntry(){ if(!entryDraft) return; app.querySelectorAll('[data-ef]').forEach(el => { entryDraft[el.dataset.ef] = el.value.trim(); }); }
+const rerender = () => renderAuction(...renderAuction.last);
+
+async function viewAuctionNew(horseId){
+  if(!isAdmin()){ app.innerHTML = '<div class="empty">هذه الصفحة للمشرف فقط.</div>'; return; }
+  app.innerHTML = '<div class="empty">جارٍ التحميل…</div>';
+  const s = await getDoc(doc(db,'horses',horseId)).catch(() => null);
+  if(!s || !s.exists()){ app.innerHTML = '<div class="empty">الإعلان غير موجود.</div>'; return; }
+  const h = { id:horseId, ...s.data() };
+  current = h;
+  const pad = n => String(n).padStart(2,'0');
+  const local = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const start = new Date(Date.now() + 10*60000), end = new Date(Date.now() + 3*86400000);
+  app.innerHTML = `
+    <h1 class="h1">إنشاء مزاد</h1>
+    <div class="mrow"><span class="ph">${h.thumb ? `<img src="${h.thumb}" alt="">` : ''}</span>
+      <div class="mi"><b>${esc(h.name)}</b><span class="meta">${esc([h.category, h.city].filter(Boolean).join('، '))}</span></div></div>
+    <label class="f">سعر الافتتاح (ر.س)<input class="in" id="aStart" inputmode="numeric" placeholder="مثال: 50000"></label>
+    <div class="two">
+      <label class="f">يبدأ<input class="in" id="aFrom" type="datetime-local" value="${local(start)}"></label>
+      <label class="f">ينتهي<input class="in" id="aTo" type="datetime-local" value="${local(end)}"></label>
+    </div>
+    <label class="f">رابط البث المباشر <span class="opt">(اختياري: يوتيوب، تيك توك…)</span><input class="in" id="aLive" inputmode="url" dir="ltr" placeholder="https://"></label>
+    <p class="meta" style="margin:-6px 0 16px;line-height:1.7">الزيادات: ${AUCTION_INCS.map(ar).join('، ')} ر.س. رسوم الدخول تُدار من بيانات الحساب البنكي.</p>
+    <div class="wact"><a class="btn" href="#/horse/${h.id}">إلغاء</a><button class="btn primary" data-act="createAuction">إنشاء المزاد</button></div>`;
+}
+
+async function viewBank(){
+  if(!isAdmin()){ app.innerHTML = '<div class="empty">هذه الصفحة للمشرف فقط.</div>'; return; }
+  const b = await getBank();
+  app.innerHTML = `
+    <h1 class="h1">الحساب البنكي للمزادات</h1>
+    <p class="meta" style="margin:-8px 0 16px">يظهر للمستخدمين عند طلب دخول أي مزاد.</p>
+    <label class="f">اسم البنك<input class="in" id="bName" value="${esc(b.bankName)}" placeholder="مثال: مصرف الراجحي"></label>
+    <label class="f">اسم المستفيد<input class="in" id="bHolder" value="${esc(b.holder)}"></label>
+    <label class="f">رقم الآيبان<input class="in" id="bIban" value="${esc(b.iban)}" dir="ltr" placeholder="SA00 0000 0000 0000 0000 0000"></label>
+    <label class="f">رسوم دخول المزاد (ر.س)<input class="in" id="bFee" value="${esc(b.fee || 200)}" inputmode="numeric"></label>
+    <div class="wact"><a class="btn" href="#/auctions">إلغاء</a><button class="btn primary" data-act="saveBank">حفظ</button></div>`;
+}
+
+/* ============ الأزرار ============ */
+const actions = {
+  pickInc: t => { bidInc = Number(t.dataset.i); rerender(); },
+  copyIban: async () => { try{ const b = await getBank(); await navigator.clipboard.writeText(b.iban.replace(/\s/g,'')); toast('نُسخ الآيبان'); }catch(e){ toast('انسخ الرقم يدوياً'); } },
+  sendEntry: async btn => {
+    collectEntry(); const d = entryDraft;
+    if(!d.name) return toast('اكتب اسمك');
+    if(digits(d.phone).length < 9) return toast('اكتب رقم جوال صحيح');
+    if(!d.receipt) return toast('ارفع صورة إيصال التحويل');
+    btn.disabled = true; btn.textContent = 'جارٍ الإرسال…';
+    try{
+      await setDoc(doc(db,'auctions',curAuction.id,'entries',user.uid), { name:d.name, phone:digits(d.phone), receipt:d.receipt, status:'pending', at:serverTimestamp() });
+      entryDraft = null; toast('أُرسل طلبك للمراجعة');
+    }catch(e){ console.error(e); toast('تعذّر الإرسال (' + (e.code || 'خطأ') + ')'); btn.disabled = false; btn.textContent = 'إرسال طلب الدخول'; }
+  },
+  bid: async btn => {
+    const amount = Number(btn.dataset.amount), id = curAuction.id;
+    if(!confirm(`تأكيد المزايدة بمبلغ ${sar(amount)}؟ المزايدة ملزمة ولا يمكن سحبها.`)) return;
+    btn.disabled = true; btn.textContent = 'جارٍ تسجيل المزايدة…';
+    try{
+      await runTransaction(db, async tx => {
+        const ref = doc(db,'auctions',id);
+        const s = await tx.get(ref); const a = s.data();
+        if(phase(a) !== 'live') throw new Error('ended');
+        const min = a.bidCount ? a.currentBid + AUCTION_INCS[0] : a.startPrice;
+        if(amount < min) throw new Error('outbid');
+        tx.update(ref, { currentBid:amount, currentBidder:user.uid, bidCount:a.bidCount + 1, lastBidAt:serverTimestamp() });
+        tx.set(doc(collection(db,'auctions',id,'bids')), { uid:user.uid, alias:alias(user.uid), amount, at:serverTimestamp() });
+      });
+      toast('سُجّلت مزايدتك');
+    }catch(e){
+      console.error(e);
+      toast(e.message === 'outbid' ? 'سبقك مزايد آخر، اختر مبلغاً أعلى' : e.message === 'ended' ? 'انتهى المزاد' : 'تعذّرت المزايدة (' + (e.code || 'خطأ') + ')');
+      rerender();
+    }
+  },
+  approve: async t => { try{ await updateDoc(doc(db,'auctions',curAuction.id,'entries',t.dataset.uid), { status:'approved', reviewedAt:serverTimestamp() }); toast('قُبل الطلب'); }catch(e){ toast('تعذّر التحديث'); } },
+  reject: async t => {
+    const note = prompt('سبب الرفض (يظهر للمستخدم):', 'لم يصل المبلغ أو الإيصال غير واضح');
+    if(note === null) return;
+    try{ await updateDoc(doc(db,'auctions',curAuction.id,'entries',t.dataset.uid), { status:'rejected', note, reviewedAt:serverTimestamp() }); toast('رُفض الطلب'); }catch(e){ toast('تعذّر التحديث'); }
+  },
+  viewReceipt: t => { const w = window.open(); if(w){ w.document.write(`<img src="${t.src}" style="max-width:100%">`); } },
+  closeAuction: async () => {
+    if(!confirm('إنهاء المزاد الآن؟ لن يتمكن أحد من المزايدة بعدها.')) return;
+    try{ await updateDoc(doc(db,'auctions',curAuction.id), { status:'closed', endAt:Timestamp.now() }); toast('انتهى المزاد'); }catch(e){ toast('تعذّر الإنهاء'); }
+  },
+  markSold: async () => { try{ await updateDoc(doc(db,'horses',curAuction.horseId), { status:'sold' }); horsesCache = null; toast('حُدّد الخيل كمباع'); }catch(e){ toast('تعذّر التحديث'); } },
+  winnerInfo: async () => {
+    try{ const s = await getDoc(doc(db,'auctions',curAuction.id,'entries',curAuction.currentBidder));
+      const w = s.exists() ? s.data() : null;
+      alert(w ? `الفائز: ${w.name}\nالجوال: ${w.phone}\nالمبلغ: ${sar(curAuction.currentBid)}` : 'لا توجد بيانات للفائز');
+    }catch(e){ toast('تعذّر جلب البيانات'); }
+  },
+  createAuction: async btn => {
+    const startPrice = Number(digits(document.getElementById('aStart').value));
+    const from = new Date(document.getElementById('aFrom').value), to = new Date(document.getElementById('aTo').value);
+    const liveUrl = document.getElementById('aLive').value.trim();
+    if(!startPrice) return toast('اكتب سعر الافتتاح');
+    if(isNaN(from) || isNaN(to) || to <= from) return toast('وقت النهاية يجب أن يكون بعد البداية');
+    if(to <= new Date()) return toast('وقت النهاية في الماضي');
+    if(liveUrl && !isUrl(liveUrl)) return toast('رابط البث يجب أن يبدأ بـ https://');
+    btn.disabled = true; btn.textContent = 'جارٍ الإنشاء…';
+    const h = current;
+    try{
+      const ref = await addDoc(collection(db,'auctions'), {
+        horseId:h.id, horseName:h.name, thumb:h.thumb || '', category:h.category || '', city:h.city || '', sellerUid:h.ownerUid,
+        startPrice, minIncrement:AUCTION_INCS[0], currentBid:0, currentBidder:'', bidCount:0,
+        startAt:Timestamp.fromDate(from), endAt:Timestamp.fromDate(to), liveUrl, status:'scheduled', createdAt:serverTimestamp()
+      });
+      toast('أُنشئ المزاد'); location.hash = '#/auction/' + ref.id;
+    }catch(e){ console.error(e); toast('تعذّر الإنشاء (' + (e.code || 'خطأ') + ')'); btn.disabled = false; btn.textContent = 'إنشاء المزاد'; }
+  },
+  saveBank: async () => {
+    const data = { bankName:document.getElementById('bName').value.trim(), holder:document.getElementById('bHolder').value.trim(),
+      iban:document.getElementById('bIban').value.trim().toUpperCase(), fee:Number(digits(document.getElementById('bFee').value)) || 200 };
+    if(!data.bankName || !data.holder || data.iban.replace(/\s/g,'').length < 15) return toast('أكمل بيانات الحساب');
+    try{ await setDoc(doc(db,'settings','bank'), data); toast('حُفظت البيانات'); location.hash = '#/auctions'; }catch(e){ toast('تعذّر الحفظ (' + (e.code || 'خطأ') + ')'); }
+  },
+  stab: t => { stableTab = Number(t.dataset.i); viewStable(currentStable.uid); },
+  follow: async btn => {
+    const s = currentStable; btn.disabled = true;
+    const ref = doc(db,'stables',s.uid,'followers',user.uid);
+    try{
+      if(s.following){ await deleteDoc(ref); toast('ألغيت المتابعة'); }
+      else{ await setDoc(ref, { at: serverTimestamp() }); toast('تتابع هذا المربط الآن'); }
+      viewStable(s.uid);
+    }catch(e){ console.error(e); btn.disabled = false; toast(s.name ? 'تعذّرت المتابعة' : 'هذا البائع لم يُنشئ صفحة مربط بعد'); }
+  },
+  verifyStable: async () => {
+    try{ await updateDoc(doc(db,'stables',currentStable.uid), { verified: !currentStable.verified }); toast(currentStable.verified ? 'أُلغي التوثيق' : 'وُثّق المربط'); viewStable(currentStable.uid); }
+    catch(e){ toast('تعذّر التحديث'); }
+  },
+  rmLogo: () => { collectStable(); stableDraft.logo = ''; renderStableEdit(); },
+  saveStable: async btn => {
+    collectStable();
+    const d = stableDraft;
+    if(!d.name) return toast('اكتب اسم المربط');
+    if(!d.city) return toast('اختر المدينة');
+    if(d.phone && digits(d.phone).length < 9) return toast('رقم الجوال غير صحيح');
+    btn.disabled = true; btn.textContent = 'جارٍ الحفظ…';
+    try{
+      const ref = doc(db,'stables',user.uid);
+      const data = { name:d.name, city:d.city, bio:d.bio, logo:d.logo, ownerUid:user.uid, updatedAt:serverTimestamp() };
+      if(d.exists) await updateDoc(ref, data);
+      else await setDoc(ref, { ...data, verified:false, createdAt:serverTimestamp() });
+      await setDoc(doc(db,'stableContacts',user.uid), { phone:digits(d.phone), whatsapp:digits(d.whatsapp) || digits(d.phone) });
+      toast('حُفظت صفحة المربط');
+      location.hash = '#/stable/' + user.uid;
+    }catch(e){ console.error(e); toast('تعذّر الحفظ (' + (e.code || 'خطأ') + ')'); btn.disabled = false; btn.textContent = 'حفظ الصفحة'; }
+  },
+  soon: () => toast('قريباً في صهيل'),
+  login: async () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    try{ await signInWithPopup(auth, provider); toast('تم الدخول'); }
+    catch(e){
+      console.error(e);
+      const c = e.code || '';
+      if(c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request') return;
+      if(c === 'auth/popup-blocked'){ toast('جارٍ فتح صفحة الدخول…'); return signInWithRedirect(auth, provider); }
+      const msg = {
+        'auth/operation-not-allowed': 'الدخول بـ Google غير مفعّل في Firebase',
+        'auth/unauthorized-domain': 'رابط الموقع غير مضاف في Authorized domains',
+        'auth/network-request-failed': 'تحقق من الاتصال بالإنترنت',
+        'auth/internal-error': 'خطأ داخلي، أغلق المتصفح وحاول مرة أخرى'
+      }[c];
+      toast((msg || 'تعذّر الدخول') + ' (' + (c || 'unknown') + ')');
+    }
+  },
+  logout: async () => { await signOut(auth); draft = null; editingId = null; toast('تم الخروج'); location.hash = '#/'; },
+  next: () => { collect(); const err = validate(step); if(err) return toast(err); step++; renderStep(); window.scrollTo(0,0); },
+  prev: () => { collect(); step--; renderStep(); window.scrollTo(0,0); },
+  rmPhoto: t => { collect(); draft.photos.splice(Number(t.dataset.i), 1); renderStep(); },
+  cover: t => { collect(); const i = Number(t.dataset.i); const [p] = draft.photos.splice(i, 1); draft.photos.unshift(p); renderStep(); },
+  share: async () => {
+    const url = location.href;
+    try{ const title = 'صهيل: ' + (location.hash.startsWith('#/stable') ? (currentStable?.name || 'صفحة مربط') : current?.name); if(navigator.share) await navigator.share({ title, url }); else { await navigator.clipboard.writeText(url); toast('نُسخ رابط الإعلان'); } }catch(e){}
+  },
+  publish: async btn => {
+    collect();
+    for(let s = 1; s <= 4; s++){ const err = validate(s); if(err){ step = s; renderStep(); toast(err); return; } }
+    const d = draft;
+    if(d.photos.reduce((a,p) => a + p.length, 0) > 950000){ step = 2; renderStep(); toast('حجم الصور كبير، احذف صورة أو أكثر'); return; }
+    btn.disabled = true; btn.textContent = 'جارٍ النشر…';
+    try{
+      const thumb = await resize(d.photos[0], 420, 0.6);
+      const data = {
+        name:d.name, category:d.category, sex:d.sex, color:d.color, city:d.city, regNo:d.regNo,
+        birthYear: d.birthYear ? Number(digits(d.birthYear)) : null,
+        sire:d.sire, dam:d.dam, sireSire:d.sireSire, sireDam:d.sireDam, damSire:d.damSire, damDam:d.damDam,
+        achievements:d.achievements, videoUrl:d.videoUrl, desc:d.desc,
+        method:d.method, price: d.method === 'fixed' ? Number(digits(d.price)) : null,
+        negotiable: d.method === 'fixed' && !!d.negotiable,
+        sellerName: d.sellerName || user.displayName || '',
+        thumb, updatedAt: serverTimestamp()
+      };
+      let id = editingId;
+      if(id){
+        await updateDoc(doc(db,'horses',id), data);
+      }else{
+        const ref = await addDoc(collection(db,'horses'), { ...data, ownerUid:user.uid, verified:false, status:'active', createdAt:serverTimestamp() });
+        id = ref.id;
+      }
+      await setDoc(doc(db,'horsePhotos',id), { photos:d.photos });
+      await setDoc(doc(db,'contacts',id), { phone:digits(d.phone), whatsapp:digits(d.whatsapp) || digits(d.phone) });
+      const wasEdit = !!editingId;
+      horsesCache = null; draft = null; editingId = null; step = 1;
+      toast(wasEdit ? 'حُفظت التعديلات' : 'نُشر الإعلان');
+      location.hash = '#/horse/' + id;
+    }catch(e){
+      console.error(e);
+      toast('تعذّر النشر. تحقق من الاتصال وحاول مرة أخرى');
+      btn.disabled = false; btn.textContent = editingId ? 'حفظ التعديلات' : 'نشر الإعلان';
+    }
+  },
+  sold: async () => {
+    try{ await updateDoc(doc(db,'horses',current.id), { status: current.status === 'sold' ? 'active' : 'sold' }); horsesCache = null; toast('تم التحديث'); viewHorse(current.id); }
+    catch(e){ toast('تعذّر التحديث'); }
+  },
+  verify: async () => {
+    try{ await updateDoc(doc(db,'horses',current.id), { verified: !current.verified }); horsesCache = null; toast(current.verified ? 'أُلغي التوثيق' : 'وُثّق الإعلان'); viewHorse(current.id); }
+    catch(e){ toast('تعذّر التحديث'); }
+  },
+  del: async () => {
+    if(!confirm('حذف الإعلان نهائياً؟ لا يمكن التراجع.')) return;
+    const id = current.id;
+    try{
+      await deleteDoc(doc(db,'horsePhotos',id));
+      await deleteDoc(doc(db,'contacts',id));
+      await deleteDoc(doc(db,'horses',id));
+      horsesCache = null; toast('حُذف الإعلان'); location.hash = '#/mine';
+    }catch(e){ console.error(e); toast('تعذّر الحذف'); }
+  }
+};
+
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-cat],[data-set],[data-act]');
+  if(!t) return;
+  if(t.dataset.cat){
+    filter.cat = t.dataset.cat;
+    document.querySelectorAll('.chip[data-cat]').forEach(b => b.classList.toggle('on', b.dataset.cat === filter.cat));
+    renderGrid(); return;
+  }
+  if(t.dataset.set){ collect(); draft[t.dataset.set] = t.dataset.val; renderStep(); return; }
+  const fn = actions[t.dataset.act];
+  if(fn){ e.preventDefault(); fn(t); }
+});
+</script>
+</body>
+</html>
