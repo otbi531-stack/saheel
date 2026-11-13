@@ -21,8 +21,8 @@ a{color:var(--accent)}
 :focus-visible{outline:3px solid #C9A055;outline-offset:2px}
 .top{position:sticky;top:0;z-index:20;background:var(--bg);padding:calc(10px + env(safe-area-inset-top)) 16px 10px}
 .top-in{max-width:560px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-.logo{display:inline-block;font-family:'Reem Kufi',serif;font-size:30px;font-weight:700;color:var(--accent);line-height:1.05;text-decoration:none;text-align:left}
-.logo small{display:block;margin-top:8px;margin-left:-14px;font-family:'IBM Plex Sans Arabic',sans-serif;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.logo{position:relative;display:inline-block;padding-bottom:26px;font-family:'Reem Kufi',serif;font-size:30px;font-weight:700;color:var(--accent);line-height:1.05;text-decoration:none}
+.logo small{position:absolute;top:calc(100% - 22px);right:78%;font-family:'IBM Plex Sans Arabic',sans-serif;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;line-height:1.4}
 main{max-width:560px;margin:0 auto;padding:0 16px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:48px;padding:0 18px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font:inherit;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
