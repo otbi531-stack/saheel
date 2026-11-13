@@ -117,6 +117,22 @@ textarea.in{height:auto;padding:12px 14px;line-height:1.6;resize:vertical}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 20px}
 .actions .btn{flex:1 1 140px}
 .admin{border:1.5px dashed #C9B596;background:#FFFDF8}
+.st-head{display:flex;align-items:center;gap:14px;margin:6px 0 12px}
+.st-logo{width:76px;height:76px;flex:none;border-radius:38px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Reem Kufi',serif;font-size:32px;font-weight:700;overflow:hidden}
+.st-logo img{width:100%;height:100%;object-fit:cover}
+.st-head h1{margin:0;font-size:24px;line-height:1.3}
+.st-bio{font-size:14px;line-height:1.8;color:#4A3628;white-space:pre-line;margin:0 0 14px}
+.st-btns{display:flex;gap:8px;margin-bottom:14px}
+.st-btns .btn{flex:1}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.stats div{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px;border-radius:12px;background:#fff;border:1px solid var(--line)}
+.stats b{font-size:18px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line);margin-bottom:14px}
+.tabs button{height:46px;border:0;border-bottom:3px solid transparent;background:transparent;font:inherit;font-size:15px;font-weight:500;color:var(--muted);cursor:pointer}
+.tabs button.on{border-bottom-color:var(--accent);color:var(--ink);font-weight:700}
+.logo-up{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.mystable{display:flex;align-items:center;gap:12px;padding:14px;margin-bottom:16px;border-radius:16px;background:#fff;border:1px solid var(--line)}
+.mystable .mi{flex:1;min-width:0}
 nav.bottom{position:fixed;bottom:0;left:0;right:0;z-index:20;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;height:calc(72px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
 nav.bottom a{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:72px;font-size:11px;color:var(--muted);text-decoration:none;font-weight:500}
 nav.bottom a.on{color:var(--accent);font-weight:700}
@@ -156,7 +172,7 @@ const ADMIN_EMAIL = "otbi531@gmail.com"; // بريد المشرف: يوثّق ا
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, limit, serverTimestamp, getCountFromServer } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = document.getElementById('app');
 const CATS = ['عربي أصيل','سباق','جمال','قدرة وتحمل','قفز'];
@@ -259,6 +275,7 @@ function route(){
   if(page === 'horse') return viewHorse(parts[1]);
   if(page === 'add') return viewAdd(parts[1]);
   if(page === 'mine') return viewMine();
+  if(page === 'stable') return parts[1] === 'edit' ? viewStableEdit() : viewStable(parts[1]);
   return viewHome();
 }
 
@@ -302,7 +319,7 @@ function card(h){
   const meta = [h.category, h.sex, ageText(h)].filter(Boolean).join('، ');
   return `<a class="card" href="#/horse/${h.id}">
     <div class="ph">${h.thumb ? `<img src="${h.thumb}" alt="" loading="lazy">` : 'لا توجد صورة'}
-      ${h.verified ? `<span class="badge">${I.check}موثّق</span>` : ''}</div>
+      ${h.status === 'sold' ? '<span class="badge sold">مباع</span>' : h.verified ? `<span class="badge">${I.check}موثّق</span>` : ''}</div>
     <div class="cb"><b>${esc(h.name)}</b><span class="meta">${esc(meta)}</span>
       <span class="meta">${esc(h.city)}</span><span class="price">${priceText(h)}</span></div></a>`;
 }
@@ -310,15 +327,17 @@ function card(h){
 /* ============ ملف الحصان ============ */
 async function viewHorse(id){
   app.innerHTML = '<div class="empty">جارٍ التحميل…</div>';
-  let h, photos = [], contact = null;
+  let h, photos = [], contact = null, stable = null;
   try{
     const s = await getDoc(doc(db,'horses',id));
     if(!s.exists()){ app.innerHTML = '<div class="empty">هذا الإعلان غير موجود أو حُذف.<br><br><a class="btn" href="#/">العودة للرئيسية</a></div>'; return; }
     h = { id, ...s.data() };
-    const [p, c] = await Promise.all([
+    const [p, c, st] = await Promise.all([
       getDoc(doc(db,'horsePhotos',id)),
-      user ? getDoc(doc(db,'contacts',id)) : Promise.resolve(null)
+      user ? getDoc(doc(db,'contacts',id)) : Promise.resolve(null),
+      h.ownerUid ? getDoc(doc(db,'stables',h.ownerUid)).catch(() => null) : Promise.resolve(null)
     ]);
+    if(st && st.exists()) stable = st.data();
     if(p.exists()) photos = p.data().photos || [];
     if(c && c.exists()) contact = c.data();
   }catch(e){ console.error(e); app.innerHTML = '<div class="empty">تعذّر تحميل الإعلان. حدّث الصفحة وحاول مرة أخرى.</div>'; return; }
@@ -360,8 +379,12 @@ async function viewHorse(id){
 
   <div class="sec"><h2>البائع</h2></div>
   <div class="box">
-    <div class="seller"><span class="av">${esc((h.sellerName || 'ص').trim()[0])}</span>
-      <div><b>${esc(h.sellerName || 'بائع على صهيل')}</b><div class="meta">${esc(h.city)}</div></div></div>
+    <a class="seller" href="#/stable/${h.ownerUid}" style="text-decoration:none;color:inherit">
+      <span class="av">${stable?.logo ? `<img src="${stable.logo}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:24px">` : esc(((stable?.name || h.sellerName || 'ص').trim()[0]))}</span>
+      <div style="flex:1"><b>${esc(stable?.name || h.sellerName || 'بائع على صهيل')}</b>
+        ${stable?.verified ? `<span class="badge" style="margin-right:6px">${I.check}موثّق</span>` : ''}
+        <div class="meta">${esc(stable?.city || h.city)}</div></div>
+      <span class="meta" style="color:var(--accent);font-weight:600">الصفحة</span></a>
     <div style="margin-top:14px">${
       !user ? `<p class="meta" style="margin:0 0 10px">سجّل الدخول لعرض رقم البائع والتواصل معه.</p><button class="btn primary block" data-act="login">الدخول بحساب Google</button>`
       : contact ? `<div style="display:flex;gap:10px">
@@ -512,7 +535,11 @@ function validate(s){
 /* ============ إعلاناتي ============ */
 async function viewMine(){
   if(!user){ app.innerHTML = loginPrompt('سجّل الدخول لعرض إعلاناتك.'); return; }
-  app.innerHTML = '<h1 class="h1">إعلاناتي</h1><div id="mine"><div class="empty">جارٍ التحميل…</div></div>';
+  app.innerHTML = `<h1 class="h1">إعلاناتي</h1>
+    <div class="mystable"><span class="av">${esc((user.displayName || 'ص').trim()[0])}</span>
+      <div class="mi"><b>صفحة مربطك</b><div class="meta">اسم المربط وشعاره ونبذة عنه، تظهر في كل إعلاناتك</div></div>
+      <a class="btn sm" href="#/stable/${user.uid}">عرض</a><a class="btn sm outline" href="#/stable/edit">تعديل</a></div>
+    <div id="mine"><div class="empty">جارٍ التحميل…</div></div>`;
   try{
     const snap = await getDocs(query(collection(db,'horses'), where('ownerUid','==',user.uid)));
     const list = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
@@ -529,8 +556,157 @@ async function viewMine(){
   }catch(e){ console.error(e); const el=document.getElementById('mine'); if(el) el.innerHTML = '<div class="empty">تعذّر تحميل إعلاناتك.</div>'; }
 }
 
+/* ============ صفحة المربط ============ */
+let stableTab = 0, currentStable = null, stableDraft = null;
+
+async function viewStable(uid){
+  if(!uid){ location.hash = '#/'; return; }
+  app.innerHTML = '<div class="empty">جارٍ التحميل…</div>';
+  let s = null, horses = [], followers = 0, following = false, contact = null;
+  try{
+    const [sd, hs, fc, mf, ct] = await Promise.all([
+      getDoc(doc(db,'stables',uid)),
+      getDocs(query(collection(db,'horses'), where('ownerUid','==',uid))),
+      getCountFromServer(collection(db,'stables',uid,'followers')).catch(() => null),
+      user ? getDoc(doc(db,'stables',uid,'followers',user.uid)).catch(() => null) : Promise.resolve(null),
+      user ? getDoc(doc(db,'stableContacts',uid)).catch(() => null) : Promise.resolve(null)
+    ]);
+    if(sd.exists()) s = sd.data();
+    horses = hs.docs.map(d => ({ id:d.id, ...d.data() })).sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+    followers = fc ? fc.data().count : 0;
+    following = !!(mf && mf.exists());
+    if(ct && ct.exists()) contact = ct.data();
+  }catch(e){ console.error(e); app.innerHTML = '<div class="empty">تعذّر تحميل صفحة المربط.</div>'; return; }
+
+  const own = user && user.uid === uid;
+  if(!s && !horses.length){
+    app.innerHTML = own
+      ? '<div class="empty">لم تُنشئ صفحة مربطك بعد.<br><br><a class="btn primary" href="#/stable/edit">أنشئ صفحة المربط</a></div>'
+      : '<div class="empty">هذه الصفحة غير موجودة.<br><br><a class="btn" href="#/">العودة للرئيسية</a></div>';
+    return;
+  }
+  currentStable = { uid, ...(s || {}), followers, following };
+  const name = s?.name || horses[0]?.sellerName || 'بائع على صهيل';
+  const active = horses.filter(h => h.status !== 'sold');
+  const sold = horses.filter(h => h.status === 'sold');
+  const list = stableTab === 0 ? active : sold;
+  const since = s?.createdAt?.seconds ? new Date(s.createdAt.seconds * 1000).getFullYear() : null;
+  const wa = contact && (contact.whatsapp || contact.phone);
+
+  app.innerHTML = `
+    <div class="st-head">
+      <span class="st-logo">${s?.logo ? `<img src="${s.logo}" alt="شعار ${esc(name)}">` : esc(name.trim()[0])}</span>
+      <div style="min-width:0">
+        <h1>${esc(name)}</h1>
+        ${s?.verified ? `<span class="badge">${I.check}مربط موثّق</span>` : ''}
+        <div class="loc" style="margin:6px 0 0">${I.pin}${esc(s?.city || horses[0]?.city || '')}${since ? `، عضو منذ ${ar(since).replace(/٬/g,'')}` : ''}</div>
+      </div>
+    </div>
+    ${s?.bio ? `<p class="st-bio">${esc(s.bio)}</p>` : ''}
+
+    <div class="st-btns">${
+      own ? '<a class="btn outline" href="#/stable/edit">تعديل صفحتي</a><button class="btn" data-act="share">مشاركة</button>'
+      : !user ? '<button class="btn primary" data-act="login">ادخل للمتابعة والتواصل</button>'
+      : `<button class="btn ${following ? 'outline' : 'primary'}" data-act="follow">${following ? 'تتابعه' : 'متابعة'}</button>
+         ${wa ? `<a class="btn" href="https://wa.me/${waNumber(wa)}?text=${encodeURIComponent('السلام عليكم، وصلت لصفحتكم عبر صهيل')}" target="_blank" rel="noopener">${I.chat}واتساب</a>
+         <a class="btn" style="flex:0 0 52px;padding:0" href="tel:${esc(digits(contact.phone))}" aria-label="اتصال">${I.phone}</a>` : ''}`
+    }</div>
+
+    <div class="stats">
+      <div><b>${ar(active.length)}</b><span class="meta">معروضة</span></div>
+      <div><b>${ar(followers)}</b><span class="meta">متابع</span></div>
+      <div><b>${ar(sold.length)}</b><span class="meta">مباعة</span></div>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button role="tab" class="${stableTab===0?'on':''}" data-act="stab" data-i="0">الخيول المعروضة</button>
+      <button role="tab" class="${stableTab===1?'on':''}" data-act="stab" data-i="1">المباعة</button>
+    </div>
+    <div class="grid">${list.length ? list.map(card).join('')
+      : `<div class="empty" style="grid-column:1/-1">${stableTab===0 ? 'لا توجد خيول معروضة حالياً.' : 'لا توجد خيول مباعة بعد.'}${own && stableTab===0 ? '<br><br><a class="btn primary" href="#/add">أضف إعلاناً</a>' : ''}</div>`}</div>
+
+    ${isAdmin() && s ? `<div class="box admin" style="margin-top:20px"><b>أدوات المشرف</b>
+      <div class="actions" style="margin:10px 0 0"><button class="btn outline" data-act="verifyStable">${s.verified ? 'إلغاء توثيق المربط' : 'توثيق المربط'}</button></div></div>` : ''}
+  `;
+}
+
+async function viewStableEdit(){
+  if(!user){ app.innerHTML = loginPrompt('سجّل الدخول لتعديل صفحة مربطك.'); return; }
+  app.innerHTML = '<div class="empty">جارٍ التحميل…</div>';
+  try{
+    const [sd, ct] = await Promise.all([getDoc(doc(db,'stables',user.uid)), getDoc(doc(db,'stableContacts',user.uid))]);
+    const s = sd.exists() ? sd.data() : {};
+    const c = ct.exists() ? ct.data() : {};
+    stableDraft = { exists: sd.exists(), name: s.name || user.displayName || '', city: s.city || '', bio: s.bio || '', logo: s.logo || '',
+      phone: c.phone || '', whatsapp: c.whatsapp && c.whatsapp !== c.phone ? c.whatsapp : '' };
+  }catch(e){ console.error(e); app.innerHTML = '<div class="empty">تعذّر تحميل بيانات المربط.</div>'; return; }
+  renderStableEdit();
+}
+function renderStableEdit(){
+  const d = stableDraft;
+  const f = (label, k, ph, extra='') => `<label class="f">${label}<input class="in" data-sf="${k}" value="${esc(d[k])}" placeholder="${ph}" ${extra}></label>`;
+  app.innerHTML = `
+    <h1 class="h1">${d.exists ? 'تعديل صفحة المربط' : 'إنشاء صفحة المربط'}</h1>
+    <div class="logo-up">
+      <span class="st-logo" id="logoPrev">${d.logo ? `<img src="${d.logo}" alt="">` : esc((d.name || 'م').trim()[0])}</span>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label class="btn sm outline" style="cursor:pointer">${d.logo ? 'تغيير الشعار' : 'أضف شعار المربط'}<input id="logoFile" type="file" accept="image/*" hidden></label>
+        ${d.logo ? '<button class="btn sm danger" data-act="rmLogo">حذف الشعار</button>' : ''}
+      </div>
+    </div>
+    ${f('اسم المربط','name','مثال: مربط الأصايل','maxlength="50"')}
+    <label class="f">المدينة<select class="in" data-sf="city"><option value="">اختر المدينة</option>${opt(CITIES, d.city)}</select></label>
+    <label class="f">نبذة عن المربط <span class="opt">(تاريخه، السلالات، أبرز الإنتاج)</span>
+      <textarea class="in" rows="4" data-sf="bio" maxlength="600">${esc(d.bio)}</textarea></label>
+    <div class="two">
+      ${f('رقم الجوال','phone','05xxxxxxxx','inputmode="tel" dir="ltr"')}
+      ${f('واتساب <span class="opt">(إن اختلف)</span>','whatsapp','05xxxxxxxx','inputmode="tel" dir="ltr"')}
+    </div>
+    <p class="meta" style="margin:-6px 0 16px">الرقم يظهر فقط للمستخدمين المسجّلين.</p>
+    <div class="wact"><a class="btn" href="#/mine">إلغاء</a><button class="btn primary" data-act="saveStable">حفظ الصفحة</button></div>`;
+  document.getElementById('logoFile').addEventListener('change', async e => {
+    collectStable();
+    const file = e.target.files[0]; if(!file) return;
+    try{ const url = URL.createObjectURL(file); stableDraft.logo = await resize(url, 320, 0.75); URL.revokeObjectURL(url); renderStableEdit(); }
+    catch(err){ toast('تعذّرت قراءة الصورة، جرّب صورة بصيغة JPG'); }
+  });
+}
+function collectStable(){ app.querySelectorAll('[data-sf]').forEach(el => { stableDraft[el.dataset.sf] = el.value.trim(); }); }
+
 /* ============ الأزرار ============ */
 const actions = {
+  stab: t => { stableTab = Number(t.dataset.i); viewStable(currentStable.uid); },
+  follow: async btn => {
+    const s = currentStable; btn.disabled = true;
+    const ref = doc(db,'stables',s.uid,'followers',user.uid);
+    try{
+      if(s.following){ await deleteDoc(ref); toast('ألغيت المتابعة'); }
+      else{ await setDoc(ref, { at: serverTimestamp() }); toast('تتابع هذا المربط الآن'); }
+      viewStable(s.uid);
+    }catch(e){ console.error(e); btn.disabled = false; toast(s.name ? 'تعذّرت المتابعة' : 'هذا البائع لم يُنشئ صفحة مربط بعد'); }
+  },
+  verifyStable: async () => {
+    try{ await updateDoc(doc(db,'stables',currentStable.uid), { verified: !currentStable.verified }); toast(currentStable.verified ? 'أُلغي التوثيق' : 'وُثّق المربط'); viewStable(currentStable.uid); }
+    catch(e){ toast('تعذّر التحديث'); }
+  },
+  rmLogo: () => { collectStable(); stableDraft.logo = ''; renderStableEdit(); },
+  saveStable: async btn => {
+    collectStable();
+    const d = stableDraft;
+    if(!d.name) return toast('اكتب اسم المربط');
+    if(!d.city) return toast('اختر المدينة');
+    if(d.phone && digits(d.phone).length < 9) return toast('رقم الجوال غير صحيح');
+    btn.disabled = true; btn.textContent = 'جارٍ الحفظ…';
+    try{
+      const ref = doc(db,'stables',user.uid);
+      const data = { name:d.name, city:d.city, bio:d.bio, logo:d.logo, ownerUid:user.uid, updatedAt:serverTimestamp() };
+      if(d.exists) await updateDoc(ref, data);
+      else await setDoc(ref, { ...data, verified:false, createdAt:serverTimestamp() });
+      await setDoc(doc(db,'stableContacts',user.uid), { phone:digits(d.phone), whatsapp:digits(d.whatsapp) || digits(d.phone) });
+      toast('حُفظت صفحة المربط');
+      location.hash = '#/stable/' + user.uid;
+    }catch(e){ console.error(e); toast('تعذّر الحفظ (' + (e.code || 'خطأ') + ')'); btn.disabled = false; btn.textContent = 'حفظ الصفحة'; }
+  },
   soon: () => toast('قريباً في صهيل'),
   login: async () => {
     const provider = new GoogleAuthProvider();
@@ -557,7 +733,7 @@ const actions = {
   cover: t => { collect(); const i = Number(t.dataset.i); const [p] = draft.photos.splice(i, 1); draft.photos.unshift(p); renderStep(); },
   share: async () => {
     const url = location.href;
-    try{ if(navigator.share) await navigator.share({ title:'صهيل: ' + current.name, url }); else { await navigator.clipboard.writeText(url); toast('نُسخ رابط الإعلان'); } }catch(e){}
+    try{ const title = 'صهيل: ' + (location.hash.startsWith('#/stable') ? (currentStable?.name || 'صفحة مربط') : current?.name); if(navigator.share) await navigator.share({ title, url }); else { await navigator.clipboard.writeText(url); toast('نُسخ رابط الإعلان'); } }catch(e){}
   },
   publish: async btn => {
     collect();
