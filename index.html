@@ -155,7 +155,7 @@ const ADMIN_EMAIL = "otbi531@gmail.com"; // بريد المشرف: يوثّق ا
 /* ======================================================= */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = document.getElementById('app');
@@ -186,7 +186,7 @@ const toEn = s => String(s ?? '').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩
 const digits = s => toEn(s).replace(/\D/g, '');
 const isUrl = s => /^https:\/\/\S+$/i.test(s || '');
 let toastTimer;
-function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600); }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),5000); }
 
 function ageText(h){
   if(!h.birthYear) return '';
@@ -247,6 +247,7 @@ function renderAuth(){
     ? `<button class="btn sm" data-act="logout">خروج</button>`
     : `<button class="btn sm outline" data-act="login">دخول</button>`;
 }
+getRedirectResult(auth).catch(e => { console.error(e); if(e && e.code) toast('تعذّر الدخول (' + e.code + ')'); });
 onAuthStateChanged(auth, u => { user = u; renderAuth(); route(); });
 
 window.addEventListener('hashchange', route);
@@ -531,7 +532,24 @@ async function viewMine(){
 /* ============ الأزرار ============ */
 const actions = {
   soon: () => toast('قريباً في صهيل'),
-  login: async () => { try{ await signInWithPopup(auth, new GoogleAuthProvider()); toast('تم الدخول'); }catch(e){ if(e.code !== 'auth/popup-closed-by-user') toast('تعذّر الدخول، حاول مرة أخرى'); } },
+  login: async () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    try{ await signInWithPopup(auth, provider); toast('تم الدخول'); }
+    catch(e){
+      console.error(e);
+      const c = e.code || '';
+      if(c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request') return;
+      if(c === 'auth/popup-blocked'){ toast('جارٍ فتح صفحة الدخول…'); return signInWithRedirect(auth, provider); }
+      const msg = {
+        'auth/operation-not-allowed': 'الدخول بـ Google غير مفعّل في Firebase',
+        'auth/unauthorized-domain': 'رابط الموقع غير مضاف في Authorized domains',
+        'auth/network-request-failed': 'تحقق من الاتصال بالإنترنت',
+        'auth/internal-error': 'خطأ داخلي، أغلق المتصفح وحاول مرة أخرى'
+      }[c];
+      toast((msg || 'تعذّر الدخول') + ' (' + (c || 'unknown') + ')');
+    }
+  },
   logout: async () => { await signOut(auth); draft = null; editingId = null; toast('تم الخروج'); location.hash = '#/'; },
   next: () => { collect(); const err = validate(step); if(err) return toast(err); step++; renderStep(); window.scrollTo(0,0); },
   prev: () => { collect(); step--; renderStep(); window.scrollTo(0,0); },
