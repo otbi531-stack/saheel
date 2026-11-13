@@ -15,7 +15,7 @@
   color-scheme: light;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Almarai',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;overflow-x:hidden;background:var(--bg);color:var(--ink);font-family:'Almarai',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
 body{padding-bottom:calc(88px + env(safe-area-inset-bottom))}
 a{color:var(--accent)}
 :focus-visible{outline:3px solid #C9A055;outline-offset:2px}
@@ -118,8 +118,9 @@ textarea.in{height:auto;padding:12px 14px;line-height:1.6;resize:vertical}
 .mrow .mi{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 20px}
 .actions .btn{flex:1 1 140px}
-.hero-logo{margin:0 -16px 14px;padding:6px 0 14px;display:flex;justify-content:center;background:#000;border-radius:0 0 28px 28px}
-.hero-logo img{width:min(100%,520px);height:auto;display:block;-webkit-mask-image:radial-gradient(ellipse 72% 70% at 50% 48%,#000 60%,transparent 100%);mask-image:radial-gradient(ellipse 72% 70% at 50% 48%,#000 60%,transparent 100%)}
+.hero-logo{position:relative;margin:0 calc(50% - 50vw) 16px;padding:0 0 22px;display:flex;flex-direction:column;align-items:center;background:#000;border-radius:0 0 28px 28px}
+.hero-logo img{width:min(78vw,360px);height:auto;display:block;-webkit-mask-image:radial-gradient(ellipse 70% 68% at 50% 50%,#000 62%,transparent 100%);mask-image:radial-gradient(ellipse 70% 68% at 50% 50%,#000 62%,transparent 100%)}
+.hero-tag{margin-top:-4px;font-family:'Almarai',sans-serif;font-size:clamp(15px,4.2vw,20px);font-weight:700;color:#C9A055;letter-spacing:.5px}
 .admin{border:1.5px dashed var(--dash);background:var(--card2)}
 .st-head{display:flex;align-items:center;gap:14px;margin:6px 0 12px}
 .st-logo{width:76px;height:76px;flex:none;border-radius:38px;background:var(--accent);color:var(--on-acc);display:flex;align-items:center;justify-content:center;font-family:'Reem Kufi',serif;font-size:32px;font-weight:700;overflow:hidden}
