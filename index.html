@@ -165,6 +165,23 @@ textarea.in{height:auto;padding:12px 14px;line-height:1.6;resize:vertical}
 .req{display:flex;gap:12px;align-items:center;padding:12px;border-radius:14px;background:var(--card);border:1px solid var(--line);margin-bottom:10px}
 .req img{width:64px;height:64px;border-radius:10px;object-fit:cover;flex:none;cursor:zoom-in}
 .req .mi{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.svc-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.svc-cats button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:14px;border:1px solid var(--line);background:var(--card);font:inherit;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer}
+.svc-cats button.on{background:var(--accent);border-color:var(--accent);color:var(--on-acc)}
+.svc-cats svg{width:24px;height:24px}
+.prov{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--line);margin-bottom:12px}
+.prov-top{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.prov-logo{width:54px;height:54px;flex:none;border-radius:14px;background:var(--accent);color:var(--on-acc);display:flex;align-items:center;justify-content:center;font-family:'Reem Kufi',serif;font-size:22px;font-weight:700;overflow:hidden}
+.prov-logo img{width:100%;height:100%;object-fit:cover}
+.prov-foot{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.slots button{height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);font:inherit;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer}
+.slots button.on{background:var(--accent);border-color:var(--accent);color:var(--on-acc)}
+.rq{padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--line);margin-bottom:10px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.rq-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.st{height:24px;display:inline-flex;align-items:center;padding:0 10px;border-radius:12px;font-size:12px;font-weight:700;white-space:nowrap}
+.st.new{background:var(--gold);color:var(--gold-ink)}.st.accepted{background:var(--ok-bg);color:var(--ok)}
+.st.declined,.st.cancelled{background:#F6DEDA;color:#8A1F14}.st.done{background:var(--seg);color:var(--muted)}
 nav.bottom{position:fixed;bottom:0;left:0;right:0;z-index:20;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;height:calc(72px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
 nav.bottom a{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:72px;font-size:11px;color:var(--muted);text-decoration:none;font-weight:500}
 nav.bottom a.on{color:var(--accent);font-weight:700}
@@ -311,6 +328,9 @@ function route(){
   if(page === 'auction') return viewAuction(parts[1]);
   if(page === 'auction-new') return viewAuctionNew(parts[1]);
   if(page === 'bank') return viewBank();
+  if(page === 'services') return viewServices();
+  if(page === 'service') return parts[1] === 'edit' ? viewProviderEdit() : viewProvider(parts[1]);
+  if(page === 'requests') return viewRequests();
   if(page === 'horse') return viewHorse(parts[1]);
   if(page === 'add') return viewAdd(parts[1]);
   if(page === 'mine') return viewMine();
@@ -326,7 +346,7 @@ async function viewHome(){
     <div class="chips">${['الكل', ...CATS].map(c => `<button class="chip ${filter.cat===c?'on':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>
     <div class="soon">
       <a href="#/auctions">${I.gavel}<span>المزادات المباشرة<small>زايد على أفضل الخيول</small></span></a>
-      <button data-act="soon">${I.tools}<span>خدمات الخيل<small>قريباً</small></span></button>
+      <a href="#/services">${I.tools}<span>خدمات الخيل<small>بيطري، نقل، بيطار، تدريب</small></span></a>
     </div>
     <h2 class="h2">الخيول المعروضة</h2>
     <div id="grid" class="grid"></div>`;
@@ -580,6 +600,9 @@ async function viewMine(){
     <div class="mystable"><span class="av">${esc((user.displayName || 'ص').trim()[0])}</span>
       <div class="mi"><b>صفحة مربطك</b><div class="meta">اسم المربط وشعاره ونبذة عنه، تظهر في كل إعلاناتك</div></div>
       <a class="btn sm" href="#/stable/${user.uid}">عرض</a><a class="btn sm outline" href="#/stable/edit">تعديل</a></div>
+    <div class="mystable"><span class="av">${I.tools}</span>
+      <div class="mi"><b>طلبات الخدمات</b><div class="meta">طلباتك من مقدّمي الخدمات، والطلبات الواردة لخدمتك</div></div>
+      <a class="btn sm outline" href="#/requests">فتح</a></div>
     <div id="mine"><div class="empty">جارٍ التحميل…</div></div>`;
   try{
     const snap = await getDocs(query(collection(db,'horses'), where('ownerUid','==',user.uid)));
@@ -924,8 +947,280 @@ async function viewBank(){
     <div class="wact"><a class="btn" href="#/auctions">إلغاء</a><button class="btn primary" data-act="saveBank">حفظ</button></div>`;
 }
 
+/* ============ خدمات الخيل ============ */
+const SVC = [
+  { id:'vet', label:'فحص بيطري', sub:'فحص ما قبل الشراء، الفحوص الدورية والحالات الطارئة',
+    icon:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 12v6M9 15h6"/>' },
+  { id:'transport', label:'نقل الخيل', sub:'داخل المدينة وبين المدن ودول الخليج بشاحنات مجهزة',
+    icon:'<path d="M2 7h11v9H2z"/><path d="M13 10h4l4 3v3h-8z"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>' },
+  { id:'farrier', label:'بيطار', sub:'تقليم الحوافر وتركيب الحدوات في موقعك',
+    icon:'<path d="M6 20V11a6 6 0 0 1 12 0v9"/><path d="M3 20h4M17 20h4"/>' },
+  { id:'training', label:'تدريب', sub:'تدريب للسباق والجمال والقفز والقدرة والتحمل',
+    icon:'<circle cx="12" cy="8" r="5"/><path d="M8.5 12 7 22l5-3 5 3-1.5-10"/>' },
+  { id:'boarding', label:'إيواء', sub:'إسطبلات للإيجار اليومي أو الشهري مع العناية الكاملة',
+    icon:'<path d="M3 10.5 12 3l9 7.5V21H3z"/><path d="M8 21v-6h8v6M8 15l8 6M16 15l-8 6"/>' },
+  { id:'photo', label:'تصوير', sub:'تصوير احترافي للإعلانات والمزادات والبطولات',
+    icon:'<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/>' }
+];
+const svcIcon = (s, color='currentColor') => `<svg viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${s.icon}</svg>`;
+const svcOf = id => SVC.find(s => s.id === id) || SVC[0];
+const SLOTS = ['٨:٠٠ ص','١٠:٠٠ ص','١٢:٠٠ م','٤:٠٠ م','٦:٠٠ م','٨:٠٠ م'];
+const RQ_ST = { new:'جديد', accepted:'مقبول', declined:'معتذر', done:'مكتمل', cancelled:'ملغى' };
+let svcCat = 'vet', svcCity = '', provDraft = null, reqDraft = null, curProv = null, reqTab = 0;
+
+async function viewServices(){
+  app.innerHTML = `<h1 class="h1">خدمات الخيل</h1>
+    <div class="svc-cats">${SVC.map(s => `<button class="${svcCat===s.id?'on':''}" data-act="svcCat" data-id="${s.id}">${svcIcon(s)}${s.label}</button>`).join('')}</div>
+    <label class="f" style="margin-bottom:12px"><select class="in" id="svcCity"><option value="">كل المدن</option>${opt(CITIES, svcCity)}</select></label>
+    <p class="meta" style="margin:0 0 14px;line-height:1.7">${esc(svcOf(svcCat).sub)}</p>
+    <div id="plist"><div class="empty">جارٍ التحميل…</div></div>
+    <div class="mystable" style="border-style:dashed;margin-top:8px"><div class="mi"><b>تقدّم خدمات للخيل؟</b><div class="meta">سجّل عيادتك أو شركتك واستقبل الطلبات عبر صهيل</div></div>
+      <a class="btn sm outline" href="#/service/edit">سجّل خدمتك</a></div>
+    <div id="pending"></div>`;
+  document.getElementById('svcCity').addEventListener('change', e => { svcCity = e.target.value; viewServices(); });
+  try{
+    const snap = await getDocs(query(collection(db,'providers'), where('status','==','approved')));
+    const list = snap.docs.map(d => ({ id:d.id, ...d.data() }))
+      .filter(p => p.type === svcCat && (!svcCity || p.city === svcCity))
+      .sort((a,b) => (b.verified?1:0) - (a.verified?1:0));
+    const el = document.getElementById('plist'); if(!el) return;
+    el.innerHTML = list.length ? list.map(provCard).join('')
+      : `<div class="empty">لا يوجد مقدّمو ${esc(svcOf(svcCat).label)}${svcCity ? ' في ' + esc(svcCity) : ''} بعد.</div>`;
+  }catch(e){ console.error(e); const el = document.getElementById('plist'); if(el) el.innerHTML = '<div class="empty">تعذّر تحميل الخدمات.</div>'; }
+  if(isAdmin()){
+    try{
+      const ps = await getDocs(query(collection(db,'providers'), where('status','==','pending')));
+      const el = document.getElementById('pending'); if(!el || ps.empty) return;
+      el.innerHTML = `<div class="box admin" style="margin-top:16px"><b>طلبات تسجيل مقدّمي الخدمات (${ar(ps.size)})</b><div style="margin-top:10px">${
+        ps.docs.map(d => ({ id:d.id, ...d.data() })).map(p => provCard(p) ).join('')}</div></div>`;
+    }catch(e){ console.error(e); }
+  }
+}
+function provCard(p){
+  const s = svcOf(p.type);
+  return `<div class="prov">
+    <a class="prov-top" href="#/service/${p.id}">
+      <span class="prov-logo">${p.logo ? `<img src="${p.logo}" alt="">` : esc((p.name || 'خ').trim()[0])}</span>
+      <div style="flex:1;min-width:0"><b style="font-size:16px">${esc(p.name)}</b>
+        ${p.verified ? `<span class="badge" style="margin-right:6px">${I.check}موثّق</span>` : ''}
+        ${p.status === 'pending' ? '<span class="st new" style="margin-right:6px">بانتظار الاعتماد</span>' : ''}
+        <div class="meta">${esc(s.label)}، ${esc(p.city)}</div></div></a>
+    ${p.tags ? `<div class="tags" style="margin:0">${p.tags.split(/[،,]/).map(x => x.trim()).filter(Boolean).slice(0,4).map(x => `<span class="tag">${esc(x)}</span>`).join('')}</div>` : ''}
+    <div class="prov-foot"><div>${p.priceFrom ? `<span class="meta">يبدأ من</span> <b class="price" style="display:inline">${sar(p.priceFrom)}</b>` : '<span class="meta">السعر عند التواصل</span>'}</div>
+      <a class="btn sm primary" href="#/service/${p.id}">اطلب الخدمة</a></div>
+  </div>`;
+}
+
+async function viewProvider(id){
+  app.innerHTML = '<div class="empty">جارٍ التحميل…</div>';
+  let p, contact = null, myHorses = [];
+  try{
+    const s = await getDoc(doc(db,'providers',id));
+    if(!s.exists()){ app.innerHTML = '<div class="empty">مقدّم الخدمة غير موجود.<br><br><a class="btn" href="#/services">كل الخدمات</a></div>'; return; }
+    p = { id, ...s.data() };
+    if(user){
+      const [c, hs] = await Promise.all([
+        getDoc(doc(db,'providerContacts',id)).catch(() => null),
+        getDocs(query(collection(db,'horses'), where('ownerUid','==',user.uid))).catch(() => null)
+      ]);
+      if(c && c.exists()) contact = c.data();
+      if(hs) myHorses = hs.docs.map(d => d.data().name).filter(Boolean);
+    }
+  }catch(e){ console.error(e); app.innerHTML = '<div class="empty">تعذّر تحميل الصفحة.</div>'; return; }
+  curProv = p;
+  if(!reqDraft || reqDraft.pid !== id){
+    const d = new Date(); d.setDate(d.getDate() + 1);
+    reqDraft = { pid:id, horse: myHorses[0] || '', date: d.toISOString().slice(0,10), slot: 1, place:'stable', location:'', notes:'',
+      name: user?.displayName || '', phone:'' };
+  }
+  reqDraft.horses = myHorses;
+  renderProvider(contact);
+}
+function renderProvider(contact){
+  const p = curProv, s = svcOf(p.type), d = reqDraft;
+  const own = user && user.uid === p.ownerUid;
+  const wa = contact && (contact.whatsapp || contact.phone);
+  const today = new Date().toISOString().slice(0,10);
+  app.innerHTML = `
+    <div style="margin:4px 0 12px"><a class="btn sm" href="#/services">${I.back}الخدمات</a></div>
+    <div class="st-head">
+      <span class="st-logo">${p.logo ? `<img src="${p.logo}" alt="">` : esc((p.name || 'خ').trim()[0])}</span>
+      <div style="min-width:0"><h1>${esc(p.name)}</h1>
+        ${p.verified ? `<span class="badge">${I.check}موثّق</span>` : ''}
+        ${p.status === 'pending' ? '<span class="st new">بانتظار اعتماد صهيل</span>' : ''}
+        <div class="loc" style="margin:6px 0 0">${I.pin}${esc(s.label)}، ${esc(p.city)}</div></div>
+    </div>
+    ${p.bio ? `<p class="st-bio">${esc(p.bio)}</p>` : ''}
+    ${p.tags ? `<div class="tags">${p.tags.split(/[،,]/).map(x => x.trim()).filter(Boolean).map(x => `<span class="tag">${esc(x)}</span>`).join('')}</div>` : ''}
+    ${p.priceFrom ? `<div class="box pricebox"><span class="meta">الأسعار تبدأ من</span><b>${sar(p.priceFrom)}</b><span class="meta">السعر النهائي يحدده مقدّم الخدمة حسب الطلب</span></div>` : ''}
+    ${own ? `<div class="actions"><a class="btn outline" href="#/service/edit">تعديل صفحة الخدمة</a><a class="btn" href="#/requests">الطلبات الواردة</a></div>` : ''}
+    ${isAdmin() ? `<div class="box admin"><b>أدوات المشرف</b><div class="actions" style="margin:10px 0 0">
+      ${p.status === 'pending' ? '<button class="btn primary" data-act="provApprove">اعتماد ونشر</button>' : '<button class="btn" data-act="provHide">إخفاء من الدليل</button>'}
+      <button class="btn outline" data-act="provVerify">${p.verified ? 'إلغاء التوثيق' : 'توثيق'}</button></div></div>` : ''}
+
+    ${own ? '' : `
+    <div class="sec"><h2>تواصل</h2></div>
+    ${!user ? '<button class="btn primary block" data-act="login">ادخل لعرض الرقم وطلب الخدمة</button>'
+      : wa ? `<div style="display:flex;gap:10px;margin-bottom:6px">
+          <a class="btn primary" style="flex:1" href="https://wa.me/${waNumber(wa)}?text=${encodeURIComponent('السلام عليكم، وصلت لخدمتكم عبر صهيل')}" target="_blank" rel="noopener">${I.chat}واتساب</a>
+          <a class="btn" style="width:120px" href="tel:${esc(digits(contact.phone))}">${I.phone}اتصال</a></div>`
+      : '<p class="meta">لا توجد بيانات تواصل.</p>'}
+
+    ${user && p.status === 'approved' ? `
+    <div class="sec"><h2>اطلب موعداً</h2></div>
+    <label class="f">الخيل${d.horses.length ? `<select class="in" data-rf="horse">${opt([...d.horses, 'خيل آخر'], d.horse)}</select>` : `<input class="in" data-rf="horse" value="${esc(d.horse)}" placeholder="اسم الخيل أو عدد الخيول">`}</label>
+    <label class="f">اليوم<input class="in" type="date" data-rf="date" value="${esc(d.date)}" min="${today}"></label>
+    <div class="f"><span>الوقت المفضّل</span><div class="slots">${SLOTS.map((x,i) => `<button class="${d.slot===i?'on':''}" data-act="slot" data-i="${i}">${x}</button>`).join('')}</div></div>
+    ${p.type === 'transport' ? `<label class="f">من وإلى<input class="in" data-rf="location" value="${esc(d.location)}" placeholder="مثال: من الرياض إلى جدة"></label>` : `
+    <div class="f"><span>المكان</span><div class="seg" style="--n:2">
+      <button class="${d.place==='stable'?'on':''}" data-act="place" data-v="stable">في مربطي</button>
+      <button class="${d.place==='provider'?'on':''}" data-act="place" data-v="provider">عند مقدّم الخدمة</button></div></div>
+    ${d.place === 'stable' ? `<label class="f">موقع المربط<input class="in" data-rf="location" value="${esc(d.location)}" placeholder="الحي أو رابط الموقع"></label>` : ''}`}
+    <label class="f">ملاحظات <span class="opt">(اختياري)</span><textarea class="in" rows="3" data-rf="notes" placeholder="مثال: فحص لصالح مشترٍ، المطلوب تقرير مكتوب">${esc(d.notes)}</textarea></label>
+    <div class="two">
+      <label class="f">اسمك<input class="in" data-rf="name" value="${esc(d.name)}"></label>
+      <label class="f">جوالك<input class="in" data-rf="phone" value="${esc(d.phone)}" inputmode="tel" dir="ltr" placeholder="05xxxxxxxx"></label>
+    </div>
+    <button class="btn primary block" data-act="sendReq">إرسال الطلب</button>
+    <p class="meta" style="margin-top:8px">يصل الطلب لمقدّم الخدمة، ويؤكد معك الموعد والسعر. تتابع حالته من «طلبات الخدمات».</p>` : ''}`}
+  `;
+  renderProvider.contact = contact;
+}
+function collectReq(){ if(!reqDraft) return; app.querySelectorAll('[data-rf]').forEach(el => { reqDraft[el.dataset.rf] = el.value.trim(); }); }
+
+async function viewProviderEdit(){
+  if(!user){ app.innerHTML = loginPrompt('سجّل الدخول لتسجيل خدمتك.'); return; }
+  app.innerHTML = '<div class="empty">جارٍ التحميل…</div>';
+  try{
+    const [s, c] = await Promise.all([getDoc(doc(db,'providers',user.uid)), getDoc(doc(db,'providerContacts',user.uid))]);
+    const p = s.exists() ? s.data() : {}, ct = c.exists() ? c.data() : {};
+    provDraft = { exists:s.exists(), status:p.status, name:p.name || '', type:p.type || svcCat, city:p.city || '', bio:p.bio || '', tags:p.tags || '',
+      priceFrom: p.priceFrom ? String(p.priceFrom) : '', logo:p.logo || '', phone:ct.phone || '', whatsapp: ct.whatsapp && ct.whatsapp !== ct.phone ? ct.whatsapp : '' };
+  }catch(e){ console.error(e); app.innerHTML = '<div class="empty">تعذّر التحميل.</div>'; return; }
+  renderProviderEdit();
+}
+function renderProviderEdit(){
+  const d = provDraft;
+  const f = (label, k, ph, extra='') => `<label class="f">${label}<input class="in" data-pf="${k}" value="${esc(d[k])}" placeholder="${ph}" ${extra}></label>`;
+  app.innerHTML = `
+    <h1 class="h1">${d.exists ? 'تعديل صفحة الخدمة' : 'سجّل خدمتك في صهيل'}</h1>
+    ${d.status === 'pending' ? '<div class="note">طلبك قيد المراجعة، وتظهر خدمتك في الدليل بعد اعتمادها.</div>' : ''}
+    ${!d.exists ? '<p class="meta" style="margin:-8px 0 16px;line-height:1.7">يراجع فريق صهيل البيانات قبل نشرها في دليل الخدمات.</p>' : ''}
+    <div class="logo-up">
+      <span class="st-logo">${d.logo ? `<img src="${d.logo}" alt="">` : esc((d.name || 'خ').trim()[0])}</span>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label class="btn sm outline" style="cursor:pointer">${d.logo ? 'تغيير الشعار' : 'أضف شعاراً أو صورة'}<input id="provLogo" type="file" accept="image/*" hidden></label>
+        ${d.logo ? '<button class="btn sm danger" data-act="provRmLogo">حذف</button>' : ''}</div>
+    </div>
+    <div class="f"><span>نوع الخدمة</span><div class="svc-cats" style="margin:0">${SVC.map(s => `<button class="${d.type===s.id?'on':''}" data-act="provType" data-id="${s.id}">${svcIcon(s)}${s.label}</button>`).join('')}</div></div>
+    ${f('اسم العيادة أو الشركة أو اسمك','name','مثال: عيادة الأصايل البيطرية','maxlength="60"')}
+    <label class="f">المدينة<select class="in" data-pf="city"><option value="">اختر المدينة</option>${opt(CITIES, d.city)}</select></label>
+    <label class="f">نبذة عن الخدمة<textarea class="in" rows="4" data-pf="bio" maxlength="600" placeholder="الخبرة، المؤهلات، ما يميزك">${esc(d.bio)}</textarea></label>
+    ${f('أبرز ما تقدمه <span class="opt">(افصل بفاصلة)</span>','tags','مثال: فحص ما قبل الشراء، أشعة، زيارة منزلية')}
+    ${f('السعر يبدأ من (ر.س) <span class="opt">(اختياري)</span>','priceFrom','مثال: 300','inputmode="numeric"')}
+    <div class="two">
+      ${f('رقم الجوال','phone','05xxxxxxxx','inputmode="tel" dir="ltr"')}
+      ${f('واتساب <span class="opt">(إن اختلف)</span>','whatsapp','05xxxxxxxx','inputmode="tel" dir="ltr"')}
+    </div>
+    <div class="wact"><a class="btn" href="#/services">إلغاء</a><button class="btn primary" data-act="saveProv">${d.exists ? 'حفظ' : 'إرسال للمراجعة'}</button></div>`;
+  document.getElementById('provLogo').addEventListener('change', async e => {
+    collectProv(); const file = e.target.files[0]; if(!file) return;
+    try{ const url = URL.createObjectURL(file); provDraft.logo = await resize(url, 320, 0.75); URL.revokeObjectURL(url); renderProviderEdit(); }
+    catch(err){ toast('تعذّرت قراءة الصورة'); }
+  });
+}
+function collectProv(){ if(!provDraft) return; app.querySelectorAll('[data-pf]').forEach(el => { provDraft[el.dataset.pf] = el.value.trim(); }); }
+
+async function viewRequests(){
+  if(!user){ app.innerHTML = loginPrompt('سجّل الدخول لعرض طلباتك.'); return; }
+  app.innerHTML = '<div class="empty">جارٍ التحميل…</div>';
+  let sent = [], received = [], isProv = false;
+  try{
+    const [a, b, me] = await Promise.all([
+      getDocs(query(collection(db,'serviceRequests'), where('requesterUid','==',user.uid))),
+      getDocs(query(collection(db,'serviceRequests'), where('providerOwnerUid','==',user.uid))),
+      getDoc(doc(db,'providers',user.uid))
+    ]);
+    const srt = x => x.docs.map(d => ({ id:d.id, ...d.data() })).sort((p,q) => (q.createdAt?.seconds||0) - (p.createdAt?.seconds||0));
+    sent = srt(a); received = srt(b); isProv = me.exists();
+  }catch(e){ console.error(e); app.innerHTML = '<div class="empty">تعذّر تحميل الطلبات.</div>'; return; }
+  if(isProv && reqTab === 0 && !sent.length && received.length) reqTab = 1;
+  const list = reqTab === 0 ? sent : received;
+  const fmtDate = s => { try{ return new Date(s + 'T12:00').toLocaleDateString('ar-SA-u-ca-gregory', { weekday:'long', day:'numeric', month:'long' }); }catch(e){ return s; } };
+  app.innerHTML = `<h1 class="h1">طلبات الخدمات</h1>
+    ${isProv ? `<div class="tabs"><button class="${reqTab===0?'on':''}" data-act="reqTab" data-i="0">طلباتي (${ar(sent.length)})</button>
+      <button class="${reqTab===1?'on':''}" data-act="reqTab" data-i="1">الواردة لخدمتي (${ar(received.filter(r => r.status==='new').length)} جديد)</button></div>` : ''}
+    ${list.length ? list.map(r => `<div class="rq">
+      <div class="rq-h"><b>${reqTab === 0 ? `<a href="#/service/${r.providerId}" style="color:inherit">${esc(r.providerName)}</a>` : esc(r.requesterName)}</b><span class="st ${r.status}">${RQ_ST[r.status]}</span></div>
+      <span class="meta">${esc(svcOf(r.type).label)}${r.horse ? '، الخيل: ' + esc(r.horse) : ''}</span>
+      <span>${fmtDate(r.date)}، ${esc(r.slot)}</span>
+      ${r.location ? `<span class="meta">${esc(r.location)}</span>` : r.place === 'provider' ? '<span class="meta">عند مقدّم الخدمة</span>' : ''}
+      ${r.notes ? `<span class="meta" style="white-space:pre-line">${esc(r.notes)}</span>` : ''}
+      ${r.reply ? `<div class="note" style="margin:4px 0 0">ردّ مقدّم الخدمة: ${esc(r.reply)}</div>` : ''}
+      ${reqTab === 1 ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+          <a class="btn sm" href="https://wa.me/${waNumber(r.phone)}" target="_blank" rel="noopener">${I.chat}واتساب</a>
+          <a class="btn sm" href="tel:${esc(r.phone)}">${I.phone}اتصال</a>
+          ${r.status === 'new' ? `<button class="btn sm primary" data-act="rqSet" data-id="${r.id}" data-s="accepted">قبول</button><button class="btn sm danger" data-act="rqSet" data-id="${r.id}" data-s="declined">اعتذار</button>` : ''}
+          ${r.status === 'accepted' ? `<button class="btn sm outline" data-act="rqSet" data-id="${r.id}" data-s="done">تم التنفيذ</button>` : ''}</div>`
+        : r.status === 'new' ? `<div><button class="btn sm danger" data-act="rqSet" data-id="${r.id}" data-s="cancelled">إلغاء الطلب</button></div>` : ''}
+    </div>`).join('')
+    : `<div class="empty">${reqTab === 0 ? 'لم ترسل أي طلب بعد.<br><br><a class="btn primary" href="#/services">تصفح الخدمات</a>' : 'لا توجد طلبات واردة بعد.'}</div>`}
+    ${!isProv ? '<p class="meta" style="margin-top:16px">تقدّم خدمات للخيل؟ <a href="#/service/edit">سجّل خدمتك</a></p>' : ''}`;
+}
+
 /* ============ الأزرار ============ */
 const actions = {
+  svcCat: t => { svcCat = t.dataset.id; viewServices(); },
+  provType: t => { collectProv(); provDraft.type = t.dataset.id; renderProviderEdit(); },
+  provRmLogo: () => { collectProv(); provDraft.logo = ''; renderProviderEdit(); },
+  saveProv: async btn => {
+    collectProv(); const d = provDraft;
+    if(!d.name) return toast('اكتب الاسم');
+    if(!d.city) return toast('اختر المدينة');
+    if(digits(d.phone).length < 9) return toast('اكتب رقم جوال صحيح');
+    btn.disabled = true; btn.textContent = 'جارٍ الحفظ…';
+    try{
+      const ref = doc(db,'providers',user.uid);
+      const data = { name:d.name, type:d.type, city:d.city, bio:d.bio, tags:d.tags, priceFrom:Number(digits(d.priceFrom)) || 0, logo:d.logo, ownerUid:user.uid, updatedAt:serverTimestamp() };
+      if(d.exists) await updateDoc(ref, data);
+      else await setDoc(ref, { ...data, status:'pending', verified:false, createdAt:serverTimestamp() });
+      await setDoc(doc(db,'providerContacts',user.uid), { phone:digits(d.phone), whatsapp:digits(d.whatsapp) || digits(d.phone) });
+      toast(d.exists ? 'حُفظت البيانات' : 'أُرسلت خدمتك للمراجعة');
+      location.hash = '#/service/' + user.uid;
+    }catch(e){ console.error(e); toast('تعذّر الحفظ (' + (e.code || 'خطأ') + ')'); btn.disabled = false; btn.textContent = 'حفظ'; }
+  },
+  slot: t => { collectReq(); reqDraft.slot = Number(t.dataset.i); renderProvider(renderProvider.contact); },
+  place: t => { collectReq(); reqDraft.place = t.dataset.v; renderProvider(renderProvider.contact); },
+  sendReq: async btn => {
+    collectReq(); const d = reqDraft, p = curProv;
+    if(!d.date) return toast('اختر اليوم');
+    if(!d.name) return toast('اكتب اسمك');
+    if(digits(d.phone).length < 9) return toast('اكتب رقم جوال صحيح');
+    if(p.type === 'transport' && !d.location) return toast('اكتب من أين وإلى أين');
+    btn.disabled = true; btn.textContent = 'جارٍ الإرسال…';
+    try{
+      await addDoc(collection(db,'serviceRequests'), {
+        providerId:p.id, providerOwnerUid:p.ownerUid, providerName:p.name, type:p.type,
+        requesterUid:user.uid, requesterName:d.name, phone:digits(d.phone),
+        horse:d.horse, date:d.date, slot:SLOTS[d.slot], place: p.type === 'transport' ? 'route' : d.place,
+        location: (p.type === 'transport' || d.place === 'stable') ? d.location : '', notes:d.notes,
+        status:'new', createdAt:serverTimestamp()
+      });
+      reqDraft = null; reqTab = 0; toast('أُرسل طلبك لمقدّم الخدمة'); location.hash = '#/requests';
+    }catch(e){ console.error(e); toast('تعذّر الإرسال (' + (e.code || 'خطأ') + ')'); btn.disabled = false; btn.textContent = 'إرسال الطلب'; }
+  },
+  reqTab: t => { reqTab = Number(t.dataset.i); viewRequests(); },
+  rqSet: async t => {
+    const s = t.dataset.s; let reply = null;
+    if(s === 'accepted'){ reply = prompt('رسالة للعميل (اختياري): الموعد أو السعر', ''); if(reply === null) return; }
+    if(s === 'declined'){ reply = prompt('سبب الاعتذار (اختياري):', 'الموعد غير متاح'); if(reply === null) return; }
+    if(s === 'cancelled' && !confirm('إلغاء الطلب؟')) return;
+    try{ await updateDoc(doc(db,'serviceRequests',t.dataset.id), { status:s, ...(reply !== null ? { reply } : {}), updatedAt:serverTimestamp() }); toast('تم التحديث'); viewRequests(); }
+    catch(e){ console.error(e); toast('تعذّر التحديث'); }
+  },
+  provApprove: async () => { try{ await updateDoc(doc(db,'providers',curProv.id), { status:'approved' }); toast('اعتُمدت الخدمة'); viewProvider(curProv.id); }catch(e){ toast('تعذّر التحديث'); } },
+  provHide: async () => { if(!confirm('إخفاء هذه الخدمة من الدليل؟')) return; try{ await updateDoc(doc(db,'providers',curProv.id), { status:'pending' }); toast('أُخفيت الخدمة'); viewProvider(curProv.id); }catch(e){ toast('تعذّر التحديث'); } },
+  provVerify: async () => { try{ await updateDoc(doc(db,'providers',curProv.id), { verified:!curProv.verified }); toast('تم التحديث'); viewProvider(curProv.id); }catch(e){ toast('تعذّر التحديث'); } },
   pickInc: t => { bidInc = Number(t.dataset.i); rerender(); },
   copyIban: async () => { try{ const b = await getBank(); await navigator.clipboard.writeText(b.iban.replace(/\s/g,'')); toast('نُسخ الآيبان'); }catch(e){ toast('انسخ الرقم يدوياً'); } },
   sendEntry: async btn => {
